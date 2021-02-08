@@ -1,0 +1,75 @@
+resources:
+  # Sample Go app in a GitRepo
+  - name: go_module_example
+    type: GitRepo
+    configuration:
+      path: elioengcomp/go-module-example
+      branches:
+        include: v3
+      gitProvider: my_github
+
+  # Build info for the published Go module
+  - name: go_build_info_publish_module
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: my_artifactory
+
+  # Build info for the published Go app
+  - name: go_build_info_publish
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: my_artifactory
+
+pipelines:
+  - name: go_build_pipeline_example
+    steps:
+      # Build the Go sample app from the GitRepo
+      - name: build_go
+        type: GoBuild
+        configuration:
+          environmentVariables:
+            JFROG_CLI_BUILD_NAME: go_example_build_publish
+          sourceLocation: .
+          repository: go
+          outputLocation: /tmp/dist
+          outputFile: go-module-example
+          inputResources:
+            - name: go_module_example
+          integrations:
+            - name: my_artifactory
+
+      # Publish the Go sample app binary to Artifactory
+      - name: publish_go_binary
+        type: GoPublishBinary
+        configuration:
+          inputSteps:
+            - name: build_go
+          targetRepository: go
+          integrations:
+            - name: my_artifactory
+
+      # Publish the Go sample app build info
+      - name: publish_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: publish_go_binary
+          outputResources:
+            - name: go_build_info_publish
+
+      # Publish the Go module from the GitRepo
+      - name: publish_go_module
+        type: GoPublishModule
+        configuration:
+          environmentVariables:
+            JFROG_CLI_BUILD_NAME: go_example_module_publish
+          sourceLocation: .
+          version: v3.0.0
+          targetRepository: go
+          autoPublishBuildInfo: true
+          integrations:
+            - name: my_artifactory
+          inputResources:
+            - name: go_module_example
+          outputResources:
+            - name: go_build_info_publish_module
