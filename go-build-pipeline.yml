@@ -21,12 +21,12 @@ resources:
       sourceArtifactory: my_artifactory
 
   - name: my_file_spec
-      type: FileSpec
-      configuration:
-        sourceArtifactory: my_artifactory
-        pattern: "*"
-        buildName: "go_build_info_publish_module"
-        buildNumber: "${run_number}"
+    type: FileSpec
+    configuration:
+      sourceArtifactory: my_artifactory
+      pattern: "*"
+      buildName: "go_build_info_publish_module"
+      buildNumber: "${run_number}"
 
 pipelines:
   - name: go_build_pipeline_example
