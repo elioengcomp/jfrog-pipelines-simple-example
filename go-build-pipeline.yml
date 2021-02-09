@@ -20,6 +20,14 @@ resources:
     configuration:
       sourceArtifactory: my_artifactory
 
+  - name: my_file_spec
+      type: FileSpec
+      configuration:
+        sourceArtifactory: my_artifactory
+        pattern: "*"
+        buildName: "go_build_info_publish_module"
+        buildNumber: "${run_number}"
+
 pipelines:
   - name: go_build_pipeline_example
     steps:
@@ -73,3 +81,13 @@ pipelines:
             - name: go_module_example
           outputResources:
             - name: go_build_info_publish_module
+
+      - name: list_file_spec_content
+        type: Bash
+        configuration:
+          inputResources:
+            - name: my_file_spec
+        execution:
+          onExecute:
+            - cd $res_my_file_spec_resourcePath
+            - ls -la
