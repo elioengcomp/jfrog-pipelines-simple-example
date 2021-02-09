@@ -25,7 +25,7 @@ resources:
     configuration:
       sourceArtifactory: my_artifactory
       pattern: "*"
-      buildName: "go_build_info_publish_module"
+      buildName: "go_example_module_publish"
       buildNumber: "${run_number}"
 
 pipelines:
