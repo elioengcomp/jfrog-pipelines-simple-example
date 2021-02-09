@@ -85,6 +85,8 @@ pipelines:
       - name: list_file_spec_content
         type: Bash
         configuration:
+          inputSteps:
+            - name: publish_go_module
           inputResources:
             - name: my_file_spec
         execution:
