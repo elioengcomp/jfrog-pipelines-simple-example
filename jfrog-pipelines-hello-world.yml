@@ -1,3 +1,6 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
+
 resources:
   - name: mySameFirstRepo
     type: GitRepo
@@ -18,7 +21,7 @@ pipelines:
         configuration:
           inputResources:
             # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: myFirstRepo
+            - name: mySameFirstRepo
         execution:
           onExecute:
             - cd $res_myFirstRepo_resourcePath
