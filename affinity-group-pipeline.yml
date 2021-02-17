@@ -1,0 +1,32 @@
+pipelines:
+  - name: affinity_group_pipeline
+    steps:
+      - name: agp_s1
+        type: Bash
+        configuration:
+          affinityGroup: agp_container
+        execution:
+          onExecute:
+            # Generate random container name
+            - RAND_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
+            - CONT_NAME="alpine-$RAND_ID"
+            - echo "Container name $CONT_NAME"
+            - add_run_variable container_name=$CONT_NAME
+            # Create container
+            - docker run -d --name $CONT_NAME alpine
+
+      - name: agp_s2
+        type: Bash
+        configuration:
+          affinityGroup: agp_container
+          inputSteps:
+            - name: agp_s1
+        execution:
+          onExecute:
+            # Get run container name
+            - echo "Container name $container_name"
+            # Count container by name
+            - COUNT=$(docker ps -q -f name=$container_name | wc -l)
+            - echo "Count $COUNT"
+            - |
+              [[ "$COUNT" == "1" ]]
