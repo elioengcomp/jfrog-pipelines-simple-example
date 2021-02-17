@@ -28,7 +28,7 @@ pipelines:
             # Get run container name
             - echo "Container name $container_name"
             # Count container by name
-            - COUNT=$(docker ps -q -f name=$container_name | wc -l)
+            - COUNT=$(docker ps -aq -f name=$container_name | wc -l)
             - echo "Count $COUNT"
             - |
               [[ "$COUNT" == "1" ]]
