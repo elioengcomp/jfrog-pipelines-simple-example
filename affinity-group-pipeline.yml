@@ -7,6 +7,8 @@ pipelines:
           affinityGroup: agp_container
         execution:
           onExecute:
+            - CADEEU=$(pwd)
+            - echo $CADEEU
             # Generate random container name
             - RAND_ID=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 8 | head -n 1)
             - CONT_NAME="alpine-$RAND_ID"
