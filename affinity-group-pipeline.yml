@@ -13,7 +13,7 @@ pipelines:
             - RAND_ID=$(tr -dc A-Za-z0-9 < /dev/urandom | head -c 8)
             - CONT_NAME="alpine-$RAND_ID"
             - echo "Container name $CONT_NAME"
-            - add_run_variable container_name=$CONT_NAME
+            - add_run_variables container_name=$CONT_NAME
             # Create container
             - docker run -d --name $CONT_NAME alpine
 
