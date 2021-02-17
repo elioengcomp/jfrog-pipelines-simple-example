@@ -48,18 +48,18 @@ pipelines:
             # Create container
             - docker run -d --name $CONT_NAME alpine
 
-          - name: nagp_s2
-            type: Bash
-            configuration:
-              inputSteps:
-                - name: nagp_s1
-            execution:
-              onExecute:
-                # Get run container name
-                - echo "Container name $container_name"
-                # Count container by name
-                # Count should be equals 0 since container was created by previous step on different affinity group
-                - COUNT=$(docker ps -aq -f name=$container_name | wc -l)
-                - echo "Count $COUNT"
-                - |
-                  [[ "$COUNT" == "0" ]]
+      - name: nagp_s2
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: nagp_s1
+        execution:
+          onExecute:
+            # Get run container name
+            - echo "Container name $container_name"
+            # Count container by name
+            # Count should be equals 0 since container was created by previous step on different affinity group
+            - COUNT=$(docker ps -aq -f name=$container_name | wc -l)
+            - echo "Count $COUNT"
+            - |
+              [[ "$COUNT" == "0" ]]
