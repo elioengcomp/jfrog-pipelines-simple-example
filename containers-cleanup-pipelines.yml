@@ -34,6 +34,7 @@ pipelines:
             # Delete container
             - docker rm -fv $container_name
 
+  # This test is only effective if executed on a node poll with a single static node to assure the steps will run on the same node
   - name: non_affinity_group_pipeline
     steps:
       - name: nagp_s1
@@ -63,3 +64,14 @@ pipelines:
             - echo "Count $COUNT"
             - |
               [[ "$COUNT" == "0" ]]
+
+  - name: win_affinity_group_pipeline
+    steps:
+      - name: wagp_s1
+        type: PowerShell
+        execution:
+          onExecute:
+            # Generate random container name
+            - $RAND_ID = -join ((65..90) + (97..122) | Get-Random -Count 8 | % {[char]$_})
+            - Write-Host "alpine-$RAND_ID"
+
