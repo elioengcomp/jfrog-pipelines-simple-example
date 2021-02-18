@@ -72,8 +72,7 @@ pipelines:
         configuration:
           affinityGroup: wagp_container
           environmentVariables:
-            readOnly:
-              docker-image: mcr.microsoft.com/windows/nanoserver:1809-amd64
+            docker-image: mcr.microsoft.com/windows/nanoserver:1809-amd64
         execution:
           onExecute:
             # Generate random container name
