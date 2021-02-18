@@ -75,11 +75,11 @@ pipelines:
           onExecute:
             # Generate random container name
             - $env:RAND_ID = -join ((65..90) + (97..122) | Get-Random -Count 8 | % {[char]$_})
-            - $env:CONT_NAME="nanoserver-$env:RAND_ID"
+            - $env:CONT_NAME="win-$env:RAND_ID"
             - echo "Container name $env:CONT_NAME"
             - add_run_variables container_name=$env:CONT_NAME
             # Create container
-            - docker run -d --name $env:CONT_NAME mcr.microsoft.com/nanoserver:latest
+            - docker run -d --name $env:CONT_NAME docker.jfrog.io/jfrog/pipelines-w19dotnetcore:3.1
 
       - name: agp_s2
         type: PowerShell
