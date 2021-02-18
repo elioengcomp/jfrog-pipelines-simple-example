@@ -83,7 +83,7 @@ pipelines:
             # Create container
             - docker run -d --name $env:CONT_NAME $env:dockerimage
 
-      - name: agp_s2
+      - name: wagp_s2
         type: PowerShell
         configuration:
           affinityGroup: wagp_container
@@ -104,3 +104,38 @@ pipelines:
             # Delete container
             - docker rm -fv $env:container_name
 
+  # This test is only effective if executed on a node poll with a single static node to assure the steps will run on the same node
+  - name: win_non_affinity_group_pipeline
+    steps:
+      - name: wnagp_s1
+        type: PowerShell
+        configuration:
+          environmentVariables:
+            dockerimage: mcr.microsoft.com/windows/nanoserver:1809-amd64
+        execution:
+          onExecute:
+            # Generate random container name
+            - $env:RAND_ID = -join ((65..90) + (97..122) | Get-Random -Count 8 | % {[char]$_})
+            - $env:CONT_NAME="win-$env:RAND_ID"
+            - echo "Container name $env:CONT_NAME"
+            - add_run_variables container_name=$env:CONT_NAME
+            # Create container
+            - docker run -d --name $env:CONT_NAME $env:dockerimage
+
+      - name: wnagp_s2
+        type: PowerShell
+        configuration:
+          inputSteps:
+            - name: wnagp_s1
+        execution:
+          onExecute:
+            # Get run container name
+            - echo "Container name $env:container_name"
+            # Count container by name
+            # Count should be equals 0 since container was created by previous step on different affinity group
+            - $env:COUNT=$(docker ps -aq -f name=$env:container_name | find /c /v """""")
+            - echo "Count $env:COUNT"
+            - |
+              if ("$env:COUNT" -ne "0") {
+                Write-Error "Error" -ErrorAction Stop
+              }
