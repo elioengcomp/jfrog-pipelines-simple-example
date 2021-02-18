@@ -79,7 +79,7 @@ pipelines:
             - echo "Container name $env:CONT_NAME"
             - add_run_variables container_name=$env:CONT_NAME
             # Create container
-            - docker run -d --name $env:CONT_NAME windows/nanoserver
+            - docker run -d --name $env:CONT_NAME mcr.microsoft.com/nanoserver:latest
 
       - name: agp_s2
         type: PowerShell
