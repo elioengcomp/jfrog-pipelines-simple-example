@@ -69,9 +69,36 @@ pipelines:
     steps:
       - name: wagp_s1
         type: PowerShell
+        configuration:
+          affinityGroup: wagp_container
         execution:
           onExecute:
             # Generate random container name
             - $env:RAND_ID = -join ((65..90) + (97..122) | Get-Random -Count 8 | % {[char]$_})
-            - echo "alpine-$env:RAND_ID"
+            - $env:CONT_NAME="alpine-$RAND_ID"
+            - echo "Container name $env:CONT_NAME"
+            - add_run_variables container_name=$env:CONT_NAME
+            # Create container
+            - docker run -d --name $env:CONT_NAME alpine
+
+      - name: agp_s2
+        type: PowerShell
+        configuration:
+          affinityGroup: wagp_container
+          inputSteps:
+            - name: wagp_s1
+        execution:
+          onExecute:
+            # Get run container name
+            - echo "Container name $env:container_name"
+            # Count container by name
+            # Count should be equals 1 since container was created by previous step on same affinity group
+            - $env:COUNT=$(docker ps -aq -f name=$env:container_name | wc -l)
+            - echo "Count $env:COUNT"
+            - |
+              if ("$env:COUNT" -ne "1") {
+                Write-Error "Error" -ErrorAction Stop
+              }
+            # Delete container
+            - docker rm -fv $env:container_name
 
