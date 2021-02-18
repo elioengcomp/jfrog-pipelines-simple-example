@@ -79,7 +79,7 @@ pipelines:
             - echo "Container name $env:CONT_NAME"
             - add_run_variables container_name=$env:CONT_NAME
             # Create container
-            - docker run -d --name $env:CONT_NAME docker.jfrog.io/jfrog/pipelines-w19dotnetcore:3.1
+            - docker run -d --name $env:CONT_NAME mcr.microsoft.com/windows/nanoserver:1809-amd64
 
       - name: agp_s2
         type: PowerShell
