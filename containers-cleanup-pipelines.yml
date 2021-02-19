@@ -136,7 +136,7 @@ pipelines:
             - docker ps -a
             - docker ps -aq -f name=$env:container_name
             - |
-              $env:COUNT=$(docker ps -aq -f name=$env:container_name | Measure-Object -line)
+              $env:COUNT=$(docker ps -aq -f name=$env:container_name | Measure-Object -line).Lines
             - echo "Count $env:COUNT"
             - |
               if ("$env:COUNT" -ne "0") {
