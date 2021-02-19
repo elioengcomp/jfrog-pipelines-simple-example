@@ -133,6 +133,7 @@ pipelines:
             - echo "Container name $env:container_name"
             # Count container by name
             # Count should be equals 0 since container was created by previous step on different affinity group
+            - docker ps -aq
             - $env:COUNT=$(docker ps -aq -f name=$env:container_name | find /c /v """""")
             - echo "Count $env:COUNT"
             - |
