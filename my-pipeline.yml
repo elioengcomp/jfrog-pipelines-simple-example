@@ -1,0 +1,17 @@
+pipelines:
+  - name: my_pipeline
+    configuration:
+      environmentVariables:
+        readOnly:
+          pipelinevar: "val-pipeline"
+    steps:
+      # Build the Go sample app from the GitRepo
+      - name: my_step
+        type: Bash
+        configuration:
+          environmentVariables:
+            stepvar: "var-step"
+        execution:
+          onExecute:
+            - echo "Pipeline var: $pipelinevar"
+            - echo "Step var: $stepvar"
