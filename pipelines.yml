@@ -1,0 +1,21 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
+
+pipelines:
+  - name: PIPE_3727_1
+    configuration:
+      environmentVariables:
+        readOnly:
+          pipe_env: pipe_value
+    steps:
+      - name: PIPE_3727_1_1
+        type: Bash
+        configuration:
+          environmentVariables:
+            step_env_str: text_value
+            step_env_num: 1
+        execution:
+          onExecute:
+            - echo $pipe_env
+            - echo $step_env_str
+            - echo $step_env_num
