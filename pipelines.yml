@@ -14,8 +14,6 @@ pipelines:
           environmentVariables:
             step_env_str: text_value
             step_env_num: 1
-            complex:
-              should: fail
         execution:
           onExecute:
             - echo $pipe_env
