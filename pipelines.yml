@@ -7,6 +7,8 @@ pipelines:
       environmentVariables:
         readOnly:
           pipe_env: pipe_value
+          pipe_env_default:
+            default: pipe_default_value
     steps:
       - name: PIPE_3727_1_1
         type: Bash
@@ -15,10 +17,11 @@ pipelines:
             step_env_str: text_value
             step_env_num: 1
             step_env_default:
-              default: text_default
+              default: step_default_value
         execution:
           onExecute:
             - echo $pipe_env
+            - echo $pipe_env_default
             - echo $step_env_str
             - echo $step_env_num
             - echo $step_env_default
