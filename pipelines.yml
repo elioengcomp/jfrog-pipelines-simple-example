@@ -14,8 +14,11 @@ pipelines:
           environmentVariables:
             step_env_str: text_value
             step_env_num: 1
+            step_env_default:
+              default: text_default
         execution:
           onExecute:
             - echo $pipe_env
             - echo $step_env_str
             - echo $step_env_num
+            - echo $step_env_default
