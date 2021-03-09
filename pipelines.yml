@@ -10,8 +10,6 @@ pipelines:
           pipe_env_default:
             description: Pipe env var description
             default: pipe_default_value
-          pipe_env_no_default:
-            description: Pipe env var description
     steps:
       - name: PIPE_3727_1_1
         type: Bash
