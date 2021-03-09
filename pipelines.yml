@@ -40,4 +40,4 @@ pipelines:
             - echo $step_env_num
             - echo $step_env_default
             - echo $step_env_default_str_list
-            - echo step_env_with_custom
+            - echo $step_env_with_custom
