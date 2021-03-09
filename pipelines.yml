@@ -10,6 +10,8 @@ pipelines:
           pipe_env_default:
             description: Pipe env var description
             default: pipe_default_value
+          pipe_env_no_default:
+            description: Pipe env var description
     steps:
       - name: PIPE_3727_1_1
         type: Bash
@@ -26,7 +28,7 @@ pipelines:
                 - value1
                 - value2
                 - value3
-            step_env_default_no_custom:
+            step_env_with_custom:
                default: value4
                values:
                  - value4
@@ -39,5 +41,5 @@ pipelines:
             - echo $step_env_str
             - echo $step_env_num
             - echo $step_env_default
-            - echo $step_env_default_no_custom
             - echo $step_env_default_str_list
+            - echo step_env_with_custom
