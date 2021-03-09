@@ -8,6 +8,7 @@ pipelines:
         readOnly:
           pipe_env: pipe_value
           pipe_env_default:
+            description: Pipe env var description
             default: pipe_default_value
     steps:
       - name: PIPE_3727_1_1
@@ -17,6 +18,7 @@ pipelines:
             step_env_str: text_value
             step_env_num: 1
             step_env_default:
+              description: Step env var description
               default: step_default_value
             step_env_default_no_custom:
               default: step_default_no_custom_value
