@@ -20,15 +20,18 @@ pipelines:
             step_env_default:
               description: Step env var description
               default: step_default_value
-            step_env_default_no_custom:
-              default: step_default_no_custom_value
-              allowCustom: false
             step_env_default_str_list:
               default: value1
               values:
                 - value1
                 - value2
                 - value3
+            step_env_default_no_custom:
+               default: value4
+               values:
+                 - value4
+                 - value5
+               allowCustom: true
         execution:
           onExecute:
             - echo $pipe_env
