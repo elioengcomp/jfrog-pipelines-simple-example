@@ -18,6 +18,15 @@ pipelines:
             step_env_num: 1
             step_env_default:
               default: step_default_value
+            step_env_default_no_custom:
+              default: step_default_no_custom_value
+              allowCustom: false
+            step_env_default_str_list:
+              default: step_default_list_value
+              values:
+                - value1
+                - value2
+                - value3
         execution:
           onExecute:
             - echo $pipe_env
@@ -25,3 +34,5 @@ pipelines:
             - echo $step_env_str
             - echo $step_env_num
             - echo $step_env_default
+            - echo $step_env_default_no_custom
+            - echo $step_env_default_str_list
