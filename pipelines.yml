@@ -22,7 +22,7 @@ pipelines:
               default: step_default_no_custom_value
               allowCustom: false
             step_env_default_str_list:
-              default: step_default_list_value
+              default: value1
               values:
                 - value1
                 - value2
