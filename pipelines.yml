@@ -75,3 +75,17 @@ pipelines:
             - name: go_module_example_2
           integrations:
             - name: my_artifactory
+
+      - name: PIPE_3727_1_3
+        type: jfrog/HealthCheck
+        configuration:
+          environmentVariables:
+            ext_env_with_custom:
+              default: value4
+              values:
+                - value4
+                - value5
+              allowCustom: true
+          healthCheckUrl: "https://jfrog.com"
+          inputSteps:
+            - name: PIPE_3727_1_1
