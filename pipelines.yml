@@ -69,8 +69,6 @@ pipelines:
               allowCustom: true
           sourceLocation: .
           repository: go
-          inputSteps:
-            - name: PIPE_3727_1_1
           inputResources:
             - name: go_module_example
           integrations:
