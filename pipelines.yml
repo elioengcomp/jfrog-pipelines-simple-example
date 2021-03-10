@@ -1,6 +1,15 @@
 template: true   # required for local templates
 valuesFilePath: ./values.yml
 
+resources:
+  - name: go_module_example
+    type: GitRepo
+    configuration:
+      path: elioengcomp/go-module-example
+      branches:
+        include: v3
+      gitProvider: my_github
+
 pipelines:
   - name: PIPE_3727_1
     configuration:
@@ -47,3 +56,18 @@ pipelines:
             - echo $step_env_default
             - echo $step_env_default_str_list
             - echo $step_env_with_custom
+
+      - name: PIPE_3727_1_2
+          type: GoBuild
+          configuration:
+            environmentVariables:
+              step_env_with_custom:
+                default: value4
+                values:
+                  - value4
+                  - value5
+                allowCustom: true
+            inputSteps:
+              - PIPE_3727_1_1
+            inputResources:
+              - name: go_module_example
