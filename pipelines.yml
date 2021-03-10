@@ -10,8 +10,8 @@ pipelines:
           pipe_env_default:
             description: Pipe env var description
             default: pipe_default_value
-          step_env_default_str_list:
-            default: value10
+          pipe_env_default_str_list:
+            default: value1
             values:
               - value1
               - value2
