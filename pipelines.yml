@@ -47,6 +47,8 @@ pipelines:
                  - value4
                  - value5
                allowCustom: true
+          inputResources:
+            - name: go_module_example
         execution:
           onExecute:
             - echo $pipe_env
