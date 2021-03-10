@@ -2,7 +2,7 @@ template: true   # required for local templates
 valuesFilePath: ./values.yml
 
 resources:
-  - name: go_module_example
+  - name: go_module_example_2
     type: GitRepo
     configuration:
       path: elioengcomp/go-module-example
@@ -48,7 +48,7 @@ pipelines:
                  - value5
                allowCustom: true
           inputResources:
-            - name: go_module_example
+            - name: go_module_example_2
         execution:
           onExecute:
             - echo $pipe_env
