@@ -27,7 +27,7 @@ pipelines:
                 - value2
                 - value3
             step_env_with_custom:
-               default: value4
+               default: value_wrong
                values:
                  - value4
                  - value5
