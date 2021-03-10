@@ -47,8 +47,6 @@ pipelines:
                  - value4
                  - value5
                allowCustom: true
-          inputResources:
-            - name: go_module_example_2
         execution:
           onExecute:
             - echo $pipe_env
@@ -59,21 +57,21 @@ pipelines:
             - echo $step_env_default_str_list
             - echo $step_env_with_custom
 
-#      - name: PIPE_3727_1_2
-#        type: GoBuild
-#        configuration:
-#          environmentVariables:
-#            step_env_with_custom:
-#              default: value4
-#              values:
-#                - value4
-#                - value5
-#              allowCustom: true
-#          sourceLocation: .
-#          repository: go
-#          inputSteps:
-#            - name: PIPE_3727_1_1
-#          inputResources:
-#            - name: go_module_example
-#          integrations:
-#            - name: my_artifactory
+      - name: PIPE_3727_1_2
+        type: GoBuild
+        configuration:
+          environmentVariables:
+            step_env_with_custom:
+              default: value4
+              values:
+                - value4
+                - value5
+              allowCustom: true
+          sourceLocation: .
+          repository: go
+          inputSteps:
+            - name: PIPE_3727_1_1
+          inputResources:
+            - name: go_module_example_2
+          integrations:
+            - name: my_artifactory
