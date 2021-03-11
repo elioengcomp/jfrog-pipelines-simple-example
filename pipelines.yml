@@ -78,6 +78,7 @@ pipelines:
 
       - name: PIPE_3727_1_3
         type: jfrog/HealthCheck
+        syntaxVersion: 0.0.4
         configuration:
           environmentVariables:
             ext_env_with_custom:
@@ -87,5 +88,10 @@ pipelines:
                 - value5
               allowCustom: true
           healthCheckUrl: "https://jfrog.com"
+          notifyOnSuccess: false
+          notifyOnFailure: false
+          stuff:
+            - "This is a string"
+            - "This is another string"
           inputSteps:
             - name: PIPE_3727_1_1
