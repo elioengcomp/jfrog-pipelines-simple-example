@@ -28,3 +28,6 @@ pipelines:
                 - value3
               allowCustom: true
             step_env2: value2
+        execution:
+          onExecute:
+            - echo "$env1"
