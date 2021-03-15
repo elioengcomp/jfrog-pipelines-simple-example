@@ -1,97 +1,30 @@
 template: true   # required for local templates
 valuesFilePath: ./values.yml
 
-resources:
-  - name: go_module_example_2
-    type: GitRepo
-    configuration:
-      path: elioengcomp/go-module-example
-      branches:
-        include: v3
-      gitProvider: my_github
-
 pipelines:
-  - name: PIPE_3727_1
+  - name: my_pipeline
     configuration:
       environmentVariables:
         readOnly:
-          pipe_env: pipe_value
-          pipe_env_default:
-            description: Pipe env var description
-            default: pipe_default_value
-          pipe_env_default_str_list:
+          env1: value1
+          env2:
             default: value1
+            description: env2 description
             values:
               - value1
               - value2
               - value3
     steps:
-      - name: PIPE_3727_1_1
+      - name: my_step
         type: Bash
         configuration:
           environmentVariables:
-            step_env_str: text_value
-            step_env_num: 1
-            step_env_default:
-              description: Step env var description
-              default: step_default_value
-            step_env_default_str_list:
+            step_env1:
               default: value1
+              description: step env1 description
               values:
                 - value1
                 - value2
                 - value3
-            step_env_with_custom:
-               default: value4
-               values:
-                 - value4
-                 - value5
-               allowCustom: true
-        execution:
-          onExecute:
-            - echo $pipe_env
-            - echo $pipe_env_default
-            - echo $step_env_str
-            - echo $step_env_num
-            - echo $step_env_default
-            - echo $step_env_default_str_list
-            - echo $step_env_with_custom
-
-      - name: PIPE_3727_1_2
-        type: GoBuild
-        configuration:
-          environmentVariables:
-            step_env_with_custom:
-              default: value4
-              values:
-                - value4
-                - value5
               allowCustom: true
-          sourceLocation: .
-          repository: go
-          inputSteps:
-            - name: PIPE_3727_1_1
-          inputResources:
-            - name: go_module_example_2
-          integrations:
-            - name: my_artifactory
-
-      - name: PIPE_3727_1_3
-        type: jfrog/HealthCheck
-        syntaxVersion: 0.0.4
-        configuration:
-          environmentVariables:
-            ext_env_with_custom:
-              default: value4
-              values:
-                - value4
-                - value5
-              allowCustom: true
-          healthCheckUrl: "https://jfrog.com"
-          notifyOnSuccess: false
-          notifyOnFailure: false
-          stuff:
-            - "This is a string"
-            - "This is another string"
-          inputSteps:
-            - name: PIPE_3727_1_1
+            step_env2: value2
