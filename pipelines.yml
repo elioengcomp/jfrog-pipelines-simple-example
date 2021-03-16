@@ -27,7 +27,7 @@ resources:
 pipelines:
   - name: my_first_pipeline
     steps:
-      - name: upload
+      - name: upload_and_publish_build_info
         type: Bash
         configuration:
           inputResources:
@@ -41,14 +41,7 @@ pipelines:
             - pwd
             - ls -la
             - jfrog rt upload values.yml example-repo-local/my-file-${run_number}.txt
-
-      - name: bash_publish_build
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: upload
-          integrations:
-            - name: my_artifactory
-        execution:
-          onExecute:
+            - jfrog rt build-collect-env
+            - jfrog rt build-add-git
             - jfrog rt build-publish
+
