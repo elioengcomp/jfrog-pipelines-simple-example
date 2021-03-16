@@ -43,9 +43,14 @@ pipelines:
             - jfrog rt upload values.yml example-repo-local/my-file.txt
 
       - name: publish_build
-        type: PublishBuildInfo
+        type: Bash
         configuration:
           inputSteps:
             - name: upload
-          outputResources:
-            - name: buildInfo
+          integrations:
+            - name: my_artifactory
+        execution:
+          onExecute:
+            - jfrog rt build-collect-env
+            - jfrog rt build-add-git
+            - jfrog rt build-publish
