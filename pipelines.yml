@@ -42,7 +42,7 @@ pipelines:
             - ls -la
             - jfrog rt upload values.yml example-repo-local/my-file-${run_number}.txt
 
-      - name: publish_build
+      - name: bash_publish_build
         type: Bash
         configuration:
           inputSteps:
