@@ -40,7 +40,7 @@ pipelines:
             - cd $res_myFirstRepo_resourcePath
             - pwd
             - ls -la
-            - jfrog rt upload values.yml example-repo-local/my-file.txt
+            - jfrog rt upload values.yml example-repo-local/my-file-${run_number}.txt
 
       - name: publish_build
         type: Bash
