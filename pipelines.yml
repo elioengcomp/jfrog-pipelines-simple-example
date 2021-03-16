@@ -51,6 +51,4 @@ pipelines:
             - name: my_artifactory
         execution:
           onExecute:
-            - jfrog rt build-collect-env
-            - jfrog rt build-add-git
             - jfrog rt build-publish
