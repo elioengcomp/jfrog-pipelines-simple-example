@@ -19,6 +19,11 @@ resources:
       commitSha: 1
       runID: 1
 
+  - name: buildInfo
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: my_artifactory
+
 pipelines:
   - name: my_first_pipeline
     steps:
@@ -67,6 +72,14 @@ pipelines:
             # Dependent pipelines can be configured to trigger when this resource is updated
             # Utility functions documentation: https://www.jfrog.com/confluence/display/JFROG/Pipelines+Utility+Functions
             - write_output myPropertyBag commitSha=$commitSha runID=$current_runid
+
+      - name: publish_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: p1_s3
+          outputResources:
+            - name: buildInfo
 
   - name: my_second_pipeline
     steps:
