@@ -37,6 +37,7 @@ pipelines:
             - name: my_artifactory
         execution:
           onExecute:
+            - cd $res_myFirstRepo_path
             - pwd
             - ls -la
             - jfrog rt upload my-file.txt example-repo-local/my-file.txt
