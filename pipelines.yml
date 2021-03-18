@@ -20,6 +20,7 @@ pipelines:
           onExecute:
             - printenv
             - jfrog -version
+            - $jfrog_cli_path -version
             - add_run_variables buildStepName=${step_name}
             - add_run_variables ${step_name}_buildNumber=$JFROG_CLI_BUILD_NUMBER
             - add_run_variables ${step_name}_buildName=$JFROG_CLI_BUILD_NAME
