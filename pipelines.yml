@@ -1,45 +1,60 @@
-template: true   # required for local templates
-valuesFilePath: ./values.yml
-
 resources:
-  - name: myFirstRepo
-    type: GitRepo
-    configuration:
-      # SCM integration where the repository is located
-      gitProvider: {{ .Values.myRepo.gitProvider }} # this will be replaced from values.yml
-      # Repository path, including org name/repo name
-      path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
-      branches:
-        # Specifies which branches will trigger dependent steps
-        include: master
-
-  - name: myPropertyBag
-    type: PropertyBag
-    configuration:
-      commitSha: 1
-      runID: 1
-
-  - name: buildInfo
+  - name: S_B_BuildInfo_0002_buildInfo
     type: BuildInfo
     configuration:
       sourceArtifactory: my_artifactory
 
 pipelines:
-  - name: my_first_pipeline
+  - name: S_B_BuildInfo_0002
+    configuration:
+      environmentVariables:
+        readOnly:
+          targetRepo: example-repo-local
     steps:
-      - name: upload_and_publish_build_info
+      - name: S_B_BuildInfo_0002_1
         type: Bash
         configuration:
-          inputResources:
-            # Sets up step to be triggered when there are commit events to myFirstRepo
-            - name: myFirstRepo
           integrations:
             - name: my_artifactory
         execution:
           onExecute:
-            - cd $res_myFirstRepo_resourcePath
-            - pwd
-            - ls -la
-            - jfrog rt upload values.yml example-repo-local/my-file-${run_number}.txt
-            - jfrog rt build-publish
+            - printenv
+            - add_run_variables buildStepName=${step_name}
+            - add_run_variables ${step_name}_buildNumber=$JFROG_CLI_BUILD_NUMBER
+            - add_run_variables ${step_name}_buildName=$JFROG_CLI_BUILD_NAME
+            - echo "${run_id}" > S_B_BuildInfo_0002_fileSpec.txt
+            - jfrog rt upload S_B_BuildInfo_0002_fileSpec.txt $targetRepo
+            - jfrog rt build-collect-env
+            - add_run_files /tmp/jfrog/. jfrog
+
+      - name: S_B_BuildInfo_0002_2
+        type: PublishBuildInfo
+        configuration:
+          outputResources:
+            - name: S_B_BuildInfo_0002_buildInfo
+          inputSteps:
+            - name: S_B_BuildInfo_0002_1
+        execution:
+          onStart:
+            - printenv
+            - add_run_variables buildStepUrl=$step_url
+
+      - name: S_B_BuildInfo_0002_3
+        type: Bash
+        configuration:
+          inputResources:
+            - name: S_B_BuildInfo_0002_buildInfo
+        execution:
+          onExecute:
+            - printenv
+            # Fetch build url from Artifactory
+            - buildInfoApiUrl="$res_S_B_BuildInfo_0002_buildInfo_sourceArtifactory_url/api/build/$res_S_B_BuildInfo_0002_buildInfo_buildName/$res_S_B_BuildInfo_0002_buildInfo_buildNumber"
+            - echo "BuildInfo API Url $buildInfoApiUrl"
+            - buildUrl=$(curl -u $res_S_B_BuildInfo_0002_buildInfo_sourceArtifactory_user:$res_S_B_BuildInfo_0002_buildInfo_sourceArtifactory_apikey $buildInfoApiUrl | jq -r .buildInfo.url)
+            - echo "Build Url $buildUrl"
+            - echo "Step Url $buildStepUrl"
+            # Compare build url with previous step url
+            - if [ "$buildUrl" != "$buildStepUrl" ]; then return 1; fi
+
+
 
