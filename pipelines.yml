@@ -19,14 +19,13 @@ pipelines:
         execution:
           onExecute:
             - printenv
-            - jfrog -version
             - $jfrog_cli_path -version
             - add_run_variables buildStepName=${step_name}
             - add_run_variables ${step_name}_buildNumber=$JFROG_CLI_BUILD_NUMBER
             - add_run_variables ${step_name}_buildName=$JFROG_CLI_BUILD_NAME
             - echo "${run_id}" > S_B_BuildInfo_0002_fileSpec.txt
-            - jfrog rt upload S_B_BuildInfo_0002_fileSpec.txt $targetRepo
-            - jfrog rt build-collect-env
+            - $jfrog_cli_path rt upload S_B_BuildInfo_0002_fileSpec.txt $targetRepo
+            - $jfrog_cli_path rt build-collect-env
             - add_run_files /tmp/jfrog/. jfrog
 
       - name: S_B_BuildInfo_0002_2
