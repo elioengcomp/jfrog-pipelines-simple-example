@@ -93,3 +93,14 @@ pipelines:
         execution:
           onExecute:
             - echo "Post Matrix"
+
+  - name: my_host_pipeline
+    steps:
+      - name: my_host_step
+        type: Bash
+        configuration:
+          runtime:
+            type: host
+        execution:
+          onExecute:
+            - echo "Running"
