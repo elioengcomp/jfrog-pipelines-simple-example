@@ -61,6 +61,14 @@ pipelines:
           onExecute:
             - echo "Running"
 
+  - name: my_simple_powershell_pipeline
+    steps:
+      - name: my_simple_powershell_step
+        type: PowerShell
+        execution:
+          onExecute:
+            - echo "Running"
+
   - name: my_matrix_pipeline
     steps:
       - name: pre_matrix_step
