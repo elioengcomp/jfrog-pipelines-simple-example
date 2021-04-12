@@ -6,8 +6,6 @@ pipelines:
         execution:
           onExecute:
             - echo "Running"
-            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            - for ((i=1;i<=1;i+=1)); do echo "$i $text"; done
 
   - name: my_pipeline
     steps:
