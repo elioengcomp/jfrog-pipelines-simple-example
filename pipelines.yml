@@ -117,11 +117,8 @@ pipelines:
     steps:
       - name: my_log_generator_step
         type: Bash
-        configuration:
-          environmentVariables:
-            lines: 1
         execution:
           onExecute:
             - echo "Running"
-            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris euismod vitae leo nec lacinia. Vivamus a pellentesque nulla. Vestibulum nec sollicitudin nisi. Phasellus dolor lacus, congue ac quam ut, sodales posuere est. Aenean non ex vehicula, ultricies elit vel, rhoncus diam. Suspendisse laoreet lectus convallis libero mollis aliquam. Maecenas id ornare nisi. Pellentesque efficitur iaculis leo, quis lobortis est egestas pellentesque."
-            - for ((i=1;i<=$lines;i+=1)); do echo "$i $text"; done
+            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            - for ((i=1;i<=1;i+=1)); do echo "$i $text"; done
