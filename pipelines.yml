@@ -1,4 +1,14 @@
 pipelines:
+  - name: my_log_generator_pipeline
+    steps:
+      - name: my_log_generator_step
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Running"
+            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            - for ((i=1;i<=1;i+=1)); do echo "$i $text"; done
+
   - name: my_pipeline
     steps:
       - name: my_step
@@ -112,13 +122,3 @@ pipelines:
         execution:
           onExecute:
             - echo "Running"
-
-  - name: my_log_generator_pipeline
-    steps:
-      - name: my_log_generator_step
-        type: Bash
-        execution:
-          onExecute:
-            - echo "Running"
-            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-            - for ((i=1;i<=1;i+=1)); do echo "$i $text"; done
