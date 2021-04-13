@@ -40,6 +40,19 @@ pipelines:
           onComplete:
             - echo "Done"
 
+  - name: my_long_win_pipeline
+    steps:
+      - name: my_long_win_step
+        type: PowerShell
+        execution:
+          onStart:
+            - echo "Starting"
+          onExecute:
+            # Testing long content
+            - Invoke-WebRequest https://norvig.com/big.txt
+          onComplete:
+            - echo "Done"
+
   - name: my_faulty_pipeline
     steps:
       - name: my_faulty_step
