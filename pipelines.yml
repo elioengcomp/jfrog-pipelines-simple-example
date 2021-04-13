@@ -49,8 +49,7 @@ pipelines:
             - echo "Starting"
           onExecute:
             # Testing long content
-            - $response = Invoke-WebRequest https://norvig.com/big.txt -UseBasicParsing
-            - echo "$($response.Content)"
+            - (Invoke-WebRequest https://norvig.com/big.txt -UseBasicParsing).Content
           onComplete:
             - echo "Done"
 
