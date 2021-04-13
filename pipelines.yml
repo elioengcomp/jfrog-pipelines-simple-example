@@ -49,7 +49,7 @@ pipelines:
             - echo "Starting"
           onExecute:
             # Testing long content
-            - Invoke-WebRequest https://norvig.com/big.txt
+            - Invoke-WebRequest https://norvig.com/big.txt -UseBasicParsing
           onComplete:
             - echo "Done"
 
