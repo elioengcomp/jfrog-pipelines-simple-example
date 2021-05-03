@@ -89,3 +89,9 @@ pipelines:
           outputResources:
             - name: helm_bluegreen_app_chart
             - name: helm_bluegreen_helm_build_info
+        execution:
+          onStart:
+            - pushd $res_helm_bluegreen_gitrepo_resourcePath/chart/app
+            - pwd
+            - ls -la
+            - popd
