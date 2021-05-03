@@ -71,7 +71,7 @@ pipelines:
         type: PublishBuildInfo
         configuration:
           inputSteps:
-            - name: docker_build
+            - name: docker_push
           outputResources:
             - name: helm_bluegreen_docker_build_info
 
