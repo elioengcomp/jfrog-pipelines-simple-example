@@ -24,11 +24,18 @@ resources:
       chart: app
       version: 0.0.1
 
-  - name: helm_bluegreen_build_info
+  - name: helm_bluegreen_docker_build_info
     type: BuildInfo
     configuration:
       sourceArtifactory: my_artifactory
-      buildName: helm_bluegreen_poc
+      buildName: helm_bluegreen_poc_image
+      buildNumber: 1
+
+  - name: helm_bluegreen_helm_build_info
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: my_artifactory
+      buildName: helm_bluegreen_poc_chart
       buildNumber: 1
 
 pipelines:
@@ -58,6 +65,15 @@ pipelines:
             - name: docker_build
           outputResources:
             - name: helm_bluegreen_app_image
+            - name: helm_bluegreen_docker_build_info
+
+      - name: publish_docker_build
+        type: PublishBuildInfo
+        configuration:
+          inputSteps:
+            - name: docker_build
+          outputResources:
+            - name: helm_bluegreen_docker_build_info
 
       - name: helm_publish
         type: HelmPublish
@@ -65,18 +81,11 @@ pipelines:
           helmVersion: 3
           chartPath: "./chart/app"
           lint: true
+          autoPublishBuildInfo: true
           inputSteps:
-            - name: docker_push
+            - name: publish_docker_build
           inputResources:
             - name: helm_bluegreen_gitrepo
           outputResources:
             - name: helm_bluegreen_app_chart
-            - name: helm_bluegreen_build_info
-
-      - name: publish_build
-        type: PublishBuildInfo
-        configuration:
-          inputSteps:
-            - name: helm_publish
-          outputResources:
-            - name: helm_bluegreen_build_info
+            - name: helm_bluegreen_helm_build_info
