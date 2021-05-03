@@ -93,6 +93,6 @@ pipelines:
           onStart:
             - CHART_VERSION=0.0.$run_number
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/chart/app
-            - "sed -ei \"s/^version: .*$/version: $CHART_VERSION/\" Chart.yaml"
-            - "sed -ei \"s/^appVersion: .*$/appVersion: $CHART_VERSION/\" Chart.yaml"
+            - "sed -ie \"s/^version: .*$/version: $CHART_VERSION/\" Chart.yaml"
+            - "sed -ie \"s/^appVersion: .*$/appVersion: $CHART_VERSION/\" Chart.yaml"
             - popd
