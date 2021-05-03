@@ -48,7 +48,7 @@ pipelines:
           dockerFileLocation: app
           dockerFileName: Dockerfile
           dockerImageName: f5760.jfrog-pipelines.com/my-docker-local/app
-          dockerImageTag: ${run_number}
+          dockerImageTag: 0.0.${run_number}
           inputResources:
             - name: helm_bluegreen_gitrepo
           integrations:
