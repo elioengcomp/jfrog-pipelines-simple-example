@@ -17,12 +17,12 @@ resources:
       autoPull: true
 
   - name: helm_bluegreen_app_chart
-      type: HelmChart
-      configuration:
-        sourceArtifactory: my_artifactory
-        repository: app-helm
-        chart: app
-        version: 0.0.1
+    type: HelmChart
+    configuration:
+      sourceArtifactory: my_artifactory
+      repository: app-helm
+      chart: app
+      version: 0.0.1
 
   - name: helm_bluegreen_build_info
     type: BuildInfo
