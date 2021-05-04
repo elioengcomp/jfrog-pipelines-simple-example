@@ -58,6 +58,7 @@ pipelines:
             - name: trigger_new_build
           inputResources:
             - name: helm_bluegreen_gitrepo
+              trigger: false
           integrations:
             - name: my_artifactory
 
@@ -93,6 +94,7 @@ pipelines:
             - name: publish_docker_build
           inputResources:
             - name: helm_bluegreen_gitrepo
+              trigger: false
           outputResources:
             - name: helm_bluegreen_app_chart
             - name: helm_bluegreen_helm_build_info
