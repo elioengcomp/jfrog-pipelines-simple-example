@@ -109,3 +109,11 @@ pipelines:
             - name: my_k8s
           inputResources:
             - name: helm_bluegreen_app_chart
+
+  - name: test
+    steps:
+      - name: test
+        type: Bash
+        execution:
+          onExecute:
+            - which yq
