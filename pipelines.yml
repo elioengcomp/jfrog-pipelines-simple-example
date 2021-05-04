@@ -117,6 +117,8 @@ pipelines:
             greenTargetService: app-green-app
             stageService: stage-app
             productionService: prod-app
+          inputSteps:
+            - name: helm_publish
         execution:
           onExecute:
             - ls -la
@@ -128,7 +130,7 @@ pipelines:
           releaseName: apptest
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
           inputSteps:
-            - name: helm_publish
+            - name: start_helm_blue_green_deploy
           integrations:
             - name: my_k8s
           inputResources:
