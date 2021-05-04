@@ -41,6 +41,11 @@ resources:
 pipelines:
   - name: helm_bluegreen_poc
     steps:
+      - name: trigger_new_build
+        type: Bash
+        execution:
+          onExecute:
+            - echo "Starting new build"
       - name: docker_build
         type: DockerBuild
         configuration:
@@ -49,6 +54,8 @@ pipelines:
           dockerFileName: Dockerfile
           dockerImageName: f5760.jfrog-pipelines.com/my-docker-local/app
           dockerImageTag: 0.0.${run_number}
+          inputSteps:
+            - name: trigger_new_build
           inputResources:
             - name: helm_bluegreen_gitrepo
           integrations:
