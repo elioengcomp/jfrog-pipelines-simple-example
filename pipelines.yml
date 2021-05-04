@@ -106,6 +106,20 @@ pipelines:
             - "sed -ie \"s/^appVersion: .*$/appVersion: $CHART_VERSION/\" Chart.yaml"
             - popd
 
+      - name: start_helm_blue_green_deploy
+        type: Bash
+        configuration:
+          namespace: pipe-master-pool
+          blueRelease: app-blue
+          blueTargetService: app-blue-app
+          greenRelease: app-green
+          greenTargetService: app-green-app
+          stageService: stage-app
+          productionService: prod-app
+        execution:
+          onExecute:
+            - ls -la
+
       - name: helm_deploy
         type: HelmDeploy
         configuration:
@@ -127,7 +141,10 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
+          integrations:
+            - name: my_k8s
         execution:
           onExecute:
             - yq_path=$res_helm_bluegreen_gitrepo_resourcePath/utils/yq
             - $yq_path -h
+            - kubectl get service apptest-app -n pipe-master-pool
