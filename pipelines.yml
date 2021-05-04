@@ -109,13 +109,14 @@ pipelines:
       - name: start_helm_blue_green_deploy
         type: Bash
         configuration:
-          namespace: pipe-master-pool
-          blueRelease: app-blue
-          blueTargetService: app-blue-app
-          greenRelease: app-green
-          greenTargetService: app-green-app
-          stageService: stage-app
-          productionService: prod-app
+          environmentVariables:
+            namespace: pipe-master-pool
+            blueRelease: app-blue
+            blueTargetService: app-blue-app
+            greenRelease: app-green
+            greenTargetService: app-green-app
+            stageService: stage-app
+            productionService: prod-app
         execution:
           onExecute:
             - ls -la
