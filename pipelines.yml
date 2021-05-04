@@ -96,3 +96,16 @@ pipelines:
             - "sed -ie \"s/^version: .*$/version: $CHART_VERSION/\" Chart.yaml"
             - "sed -ie \"s/^appVersion: .*$/appVersion: $CHART_VERSION/\" Chart.yaml"
             - popd
+
+      - name: helm_deploy
+        type: HelmDeploy
+        configuration:
+          helmVersion: 3
+          releaseName: apptest
+          flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
+          inputSteps:
+            - name: helm_publish
+          integrations:
+            - name: my_k8s
+          inputResources:
+            - name: helm_bluegreen_app_chart
