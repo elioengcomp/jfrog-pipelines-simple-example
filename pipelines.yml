@@ -123,6 +123,11 @@ pipelines:
     steps:
       - name: test
         type: Bash
+        configuration:
+          inputResources:
+            - name: helm_bluegreen_gitrepo
+              trigger: false
         execution:
           onExecute:
-            - which yq
+            - yq_path=$res_helm_bluegreen_gitrepo_resourcePath/utils/yq
+            - $yq_path -h
