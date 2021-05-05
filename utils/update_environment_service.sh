@@ -13,35 +13,35 @@ YQ_PATH=$SCRIPT_DIR/yq
 
 cleanup_yaml() {
   file_path=$1
-  $YQ_PATH -yi 'del(.spec.clusterIP)' $file_path
-  $YQ_PATH -yi 'del(.spec.ports[].nodePort)' $file_path
-  $YQ_PATH -yi 'del(.metadata.annotations."meta.helm.sh/release-name")' $file_path
-  $YQ_PATH -yi 'del(.metadata.annotations."meta.helm.sh/release-namespace")' $file_path
-  $YQ_PATH -yi 'del(.metadata.labels."helm.sh/chart")' $file_path
-  $YQ_PATH -yi 'del(.status)' $file_path
+  $YQ_PATH eval -i 'del(.spec.clusterIP)' $file_path
+  $YQ_PATH eval -i 'del(.spec.ports[].nodePort)' $file_path
+  $YQ_PATH eval -i 'del(.metadata.annotations."meta.helm.sh/release-name")' $file_path
+  $YQ_PATH eval -i 'del(.metadata.annotations."meta.helm.sh/release-namespace")' $file_path
+  $YQ_PATH eval -i 'del(.metadata.labels."helm.sh/chart")' $file_path
+  $YQ_PATH eval -i 'del(.status)' $file_path
 }
 
 set_fields() {
   file_path=$1
   name=$2
   env=$3
-  $YQ_PATH -yi ".metadata.name = \"$name\"" $file_path
-  $YQ_PATH -yi ".metadata.annotations.\"pipelines.jfrog.com/environment\" = \"$env\"" $file_path
-  $YQ_PATH -yi ".metadata.labels.\"app.kubernetes.io/managed-by\" = \"Pipelines\"" $file_path
+  $YQ_PATH eval -i ".metadata.name = \"$name\"" $file_path
+  $YQ_PATH eval -i ".metadata.annotations.\"pipelines.jfrog.com/environment\" = \"$env\"" $file_path
+  $YQ_PATH eval -i ".metadata.labels.\"app.kubernetes.io/managed-by\" = \"Pipelines\"" $file_path
 }
 
 copy_immutable_fields() {
   source_path=$1
   target_path=$2
 
-  clusterIP=$($YQ_PATH -r ".spec.clusterIP" $source_path)
-  $YQ_PATH -yi ".spec.clusterIP = \"$clusterIP\"" $target_path
-  nodePort=$($YQ_PATH -r ".spec.ports[0].nodePort" $source_path)
-  $YQ_PATH -yi ".spec.ports[0].nodePort = $nodePort" $target_path
-  uid=$($YQ_PATH -r ".metadata.uid" $source_path)
-  $YQ_PATH -yi ".metadata.uid = \"$uid\"" $target_path
-  resourceVersion=$($YQ_PATH -r ".metadata.resourceVersion" $source_path)
-  $YQ_PATH -yi ".metadata.resourceVersion = \"$resourceVersion\"" $target_path
+  clusterIP=$($YQ_PATH eval ".spec.clusterIP" $source_path)
+  $YQ_PATH eval -i ".spec.clusterIP = \"$clusterIP\"" $target_path
+  nodePort=$($YQ_PATH eval ".spec.ports[0].nodePort" $source_path)
+  $YQ_PATH eval -i ".spec.ports[0].nodePort = $nodePort" $target_path
+  uid=$($YQ_PATH eval ".metadata.uid" $source_path)
+  $YQ_PATH eval -i ".metadata.uid = \"$uid\"" $target_path
+  resourceVersion=$($YQ_PATH eval ".metadata.resourceVersion" $source_path)
+  $YQ_PATH eval -i ".metadata.resourceVersion = \"$resourceVersion\"" $target_path
 }
 
 main() {

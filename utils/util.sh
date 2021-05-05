@@ -25,7 +25,7 @@ fetch_service_yaml() {
 get_annotation_value() {
   file_path=$1
   annotation_path=.metadata.annotations.\"$2\"
-  $YQ_PATH -r $annotation_path $file_path
+  $YQ_PATH eval $annotation_path $file_path
 }
 
 create_temporary_service_yaml_copy() {
