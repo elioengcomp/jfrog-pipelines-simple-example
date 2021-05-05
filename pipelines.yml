@@ -132,7 +132,6 @@ pipelines:
             - add_run_variables hbgd_stage_service=$stageService
             - add_run_variables hbgd_prod_service=$productionService
 
-            - YQ_PATH=$res_helm_bluegreen_gitrepo_resourcePath/utils/yq
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
             - add_run_variables hbgd_current_stage_env=$(./get_current_stage_environment.sh $productionService)
             - 'echo "Current stage env: $hbgd_current_stage_env"'
@@ -164,7 +163,6 @@ pipelines:
               trigger: false
         execution:
           onExecute:
-            - YQ_PATH=$res_helm_bluegreen_gitrepo_resourcePath/utils/yq
             - current_stage_target_service_config_name=hbgd_${hbgd_current_stage_env}_target_service
             - current_stage_target_service_name=${!current_stage_target_service_config_name}
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils

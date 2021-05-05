@@ -9,6 +9,7 @@ GREEN="green"
 
 SCRIPT_DIR=$(dirname $0)
 source $SCRIPT_DIR/util.sh
+YQ_PATH=$SCRIPT_DIR/yq
 
 cleanup_yaml() {
   file_path=$1
