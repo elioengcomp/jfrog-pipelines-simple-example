@@ -161,6 +161,8 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
+          integrations:
+            - name: my_k8s
         execution:
           onExecute:
             - current_stage_target_service_config_name=hbgd_${hbgd_current_stage_env}_target_service
