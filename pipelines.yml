@@ -124,8 +124,21 @@ pipelines:
               trigger: false
         execution:
           onExecute:
-            - current_stage_env=$($res_helm_bluegreen_gitrepo_resourcePath/utils/get_current_stage_environment.sh $productionService)
-            - 'echo "Current stage env: $current_stage_env"'
+            - add_run_variables hbgd_namespace=$namespace
+            - add_run_variables hbgd_blue_release=$blueRelease
+            - add_run_variables hbgd_blue_target_service=$blueTargetService
+            - add_run_variables hbgd_green_release=$greenRelease
+            - add_run_variables hbgd_green_target_service=$greenTargetService
+            - add_run_variables hbgd_stage_service=$stageService
+            - add_run_variables hbgd_prod_service=$productionService
+
+            - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
+            - add_run_variables hbgd_current_stage_env=$(./get_current_stage_environment.sh $productionService)
+            - 'echo "Current stage env: $hbgd_current_stage_env"'
+            - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
+            - add_run_variables hbgd_current_stage_release=${!current_stage_config_name}
+            - 'echo "Current stage release: $hbgd_current_stage_release"'
+            - popd
 
       - name: helm_deploy
         type: HelmDeploy
