@@ -33,12 +33,24 @@ copy_immutable_fields() {
   target_path=$2
 
   clusterIP=$($YQ_PATH eval ".spec.clusterIP" $source_path)
+  if [[ $? != 0 ]]; then
+    exit $?
+  fi
   $YQ_PATH eval -i ".spec.clusterIP = \"$clusterIP\"" $target_path
   nodePort=$($YQ_PATH eval ".spec.ports[0].nodePort" $source_path)
+  if [[ $? != 0 ]]; then
+    exit $?
+  fi
   $YQ_PATH eval -i ".spec.ports[0].nodePort = $nodePort" $target_path
   uid=$($YQ_PATH eval ".metadata.uid" $source_path)
+  if [[ $? != 0 ]]; then
+    exit $?
+  fi
   $YQ_PATH eval -i ".metadata.uid = \"$uid\"" $target_path
   resourceVersion=$($YQ_PATH eval ".metadata.resourceVersion" $source_path)
+  if [[ $? != 0 ]]; then
+    exit $?
+  fi
   $YQ_PATH eval -i ".metadata.resourceVersion = \"$resourceVersion\"" $target_path
 }
 
