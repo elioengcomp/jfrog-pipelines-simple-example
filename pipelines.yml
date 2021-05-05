@@ -144,7 +144,7 @@ pipelines:
         type: HelmDeploy
         configuration:
           helmVersion: 3
-          releaseName: apptest
+          releaseName: ${hbgd_current_stage_release}
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
           inputSteps:
             - name: start_helm_blue_green_deploy
