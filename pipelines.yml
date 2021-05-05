@@ -171,6 +171,17 @@ pipelines:
             - ./update_environment_service.sh $current_stage_target_service_name $hbgd_stage_service $hbgd_current_stage_env $hbgd_namespace
             - popd
 
+      - name: test_stage
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: update_stage_service
+          integrations:
+            - name: my_k8s
+        execution:
+          onExecute:
+            - ls -la
+
   - name: test
     steps:
       - name: test
@@ -183,6 +194,5 @@ pipelines:
             - name: my_k8s
         execution:
           onExecute:
-            - yq_path=$res_helm_bluegreen_gitrepo_resourcePath/utils/yq
-            - $yq_path -h
-            - kubectl get service apptest-app -n pipe-master-pool
+            - jq -h
+            - jq --version
