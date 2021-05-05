@@ -1,6 +1,4 @@
-#!/bin/bash
-
-#!/bin/bash
+#!/bin/bash -e
 
 # Constants
 ANNOTATION="pipelines.jfrog.com/environment"
