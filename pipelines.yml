@@ -119,9 +119,13 @@ pipelines:
             productionService: prod-app
           inputSteps:
             - name: helm_publish
+          inputResources:
+            - name: helm_bluegreen_gitrepo
+              trigger: false
         execution:
           onExecute:
-            - ls -la
+            - current_stage_env=$($res_helm_bluegreen_gitrepo_resourcePath/utils/get_current_stage_environment.sh $productionService)
+            - echo "Current stage env: $current_stage_env"
 
       - name: helm_deploy
         type: HelmDeploy
