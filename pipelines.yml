@@ -209,7 +209,7 @@ pipelines:
             - name: helm_bluegreen_in_progress
         execution:
           onExecute:
-            - ls -la
+            - echo "Testing stage environment"
           onSuccess:
             - write_output helm_bluegreen_in_progress success=true
           onFailure:
@@ -244,7 +244,7 @@ pipelines:
             - name: helm_bluegreen_done
         execution:
           onExecute:
-            - ls -la
+            - echo "Testing prod environment"
           onSuccess:
             - write_output helm_bluegreen_done success=true
           onFailure:
