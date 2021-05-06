@@ -7,51 +7,53 @@ GREEN="green"
 
 SCRIPT_DIR=$(dirname $0)
 source $SCRIPT_DIR/util.sh
-YQ_PATH=$SCRIPT_DIR/yq
 
-cleanup_yaml() {
+cleanup_json() {
   file_path=$1
-  $YQ_PATH eval -i 'del(.spec.clusterIP)' $file_path
-  $YQ_PATH eval -i 'del(.spec.ports[].nodePort)' $file_path
-  $YQ_PATH eval -i 'del(.metadata.annotations."meta.helm.sh/release-name")' $file_path
-  $YQ_PATH eval -i 'del(.metadata.annotations."meta.helm.sh/release-namespace")' $file_path
-  $YQ_PATH eval -i 'del(.metadata.labels."helm.sh/chart")' $file_path
-  $YQ_PATH eval -i 'del(.status)' $file_path
+  jq 'del(.spec.clusterIP)' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq 'del(.spec.ports[].nodePort)' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq 'del(.metadata.annotations."meta.helm.sh/release-name")' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq 'del(.metadata.annotations."meta.helm.sh/release-namespace")' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq 'del(.metadata.labels."helm.sh/chart")' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq 'del(.status)' $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
 }
 
 set_fields() {
   file_path=$1
   name=$2
   env=$3
-  $YQ_PATH eval -i ".metadata.name = \"$name\"" $file_path
-  $YQ_PATH eval -i ".metadata.annotations.\"pipelines.jfrog.com/environment\" = \"$env\"" $file_path
-  $YQ_PATH eval -i ".metadata.labels.\"app.kubernetes.io/managed-by\" = \"Pipelines\"" $file_path
+  jq ".metadata.name = \"$name\"" $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq ".metadata.annotations.\"pipelines.jfrog.com/environment\" = \"$env\"" $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
+  jq ".metadata.labels.\"app.kubernetes.io/managed-by\" = \"Pipelines\"" $file_path > $file_path.tmp && mv ${file_path}.tmp $file_path
 }
 
 copy_immutable_fields() {
   source_path=$1
   target_path=$2
 
-  clusterIP=$($YQ_PATH eval ".spec.clusterIP" $source_path)
+  clusterIP=$(jq -r ".spec.clusterIP" $source_path)
   if [[ $? != 0 ]]; then
     exit $?
   fi
-  $YQ_PATH eval -i ".spec.clusterIP = \"$clusterIP\"" $target_path
-  nodePort=$($YQ_PATH eval ".spec.ports[0].nodePort" $source_path)
+  jq ".spec.clusterIP = \"$clusterIP\"" $target_path > ${target_path}.tmp && mv ${target_path}.tmp $target_path
+
+  nodePort=$(jq -r ".spec.ports[0].nodePort" $source_path)
   if [[ $? != 0 ]]; then
     exit $?
   fi
-  $YQ_PATH eval -i ".spec.ports[0].nodePort = $nodePort" $target_path
-  uid=$($YQ_PATH eval ".metadata.uid" $source_path)
+  jq ".spec.ports[0].nodePort = $nodePort" $target_path > ${target_path}.tmp && mv ${target_path}.tmp $target_path
+
+  uid=$(jq -r ".metadata.uid" $source_path)
   if [[ $? != 0 ]]; then
     exit $?
   fi
-  $YQ_PATH eval -i ".metadata.uid = \"$uid\"" $target_path
-  resourceVersion=$($YQ_PATH eval ".metadata.resourceVersion" $source_path)
+  jq ".metadata.uid = \"$uid\"" $target_path > ${target_path}.tmp && mv ${target_path}.tmp $target_path
+
+  resourceVersion=$(jq -r ".metadata.resourceVersion" $source_path)
   if [[ $? != 0 ]]; then
     exit $?
   fi
-  $YQ_PATH eval -i ".metadata.resourceVersion = \"$resourceVersion\"" $target_path
+  jq ".metadata.resourceVersion = \"$resourceVersion\"" $target_path > ${target_path}.tmp && mv ${target_path}.tmp $target_path
 }
 
 main() {
@@ -64,21 +66,22 @@ main() {
 
   echo "Copying service $SOURCE_SERVICE_NAME to $TARGET_SERVICE_NAME"
 
-  source_yaml_path=$(fetch_service_yaml $SOURCE_SERVICE_NAME $NAMESPACE)
-
+  source_json_path=$(fetch_service_json $SOURCE_SERVICE_NAME $NAMESPACE)
   target_exists=$(check_service_exists $TARGET_SERVICE_NAME $NAMESPACE)
   if [[ $target_exists == true ]]; then
-    existing_target_yaml_path=$(fetch_service_yaml $TARGET_SERVICE_NAME $NAMESPACE)
-    target_yaml_path=$(create_temporary_service_yaml_copy $source_yaml_path)
-    cleanup_yaml $target_yaml_path
-    copy_immutable_fields $existing_target_yaml_path $target_yaml_path
+    echo "Updating service $TARGET_SERVICE_NAME"
+    existing_target_json_path=$(fetch_service_json $TARGET_SERVICE_NAME $NAMESPACE)
+    target_json_path=$(create_temporary_service_json_copy $source_json_path)
+    cleanup_json $target_json_path
+    copy_immutable_fields $existing_target_json_path $target_json_path
   else
-    target_yaml_path=$(create_temporary_service_yaml_copy $source_yaml_path)
-    cleanup_yaml $target_yaml_path
+    echo "Creating service $TARGET_SERVICE_NAME"
+    target_json_path=$(create_temporary_service_json_copy $source_json_path)
+    cleanup_json $target_json_path
   fi
 
-  set_fields $target_yaml_path $TARGET_SERVICE_NAME $ENV_LABEL
-  kubectl apply -n $NAMESPACE -f $target_yaml_path
+  set_fields $target_json_path $TARGET_SERVICE_NAME $ENV_LABEL
+  kubectl apply -n $NAMESPACE -f $target_json_path
 }
 
 main $@

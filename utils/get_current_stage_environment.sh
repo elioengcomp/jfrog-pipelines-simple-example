@@ -7,7 +7,6 @@ GREEN="green"
 
 SCRIPT_DIR=$(dirname $0)
 source $SCRIPT_DIR/util.sh
-YQ_PATH=$SCRIPT_DIR/yq
 
 main() {
 
@@ -22,9 +21,9 @@ main() {
     return
   fi
 
-  yaml_path=$(fetch_service_yaml $PROD_SERVICE_NAME $NAMESPACE)
+  json_path=$(fetch_service_json $PROD_SERVICE_NAME $NAMESPACE)
 
-  env=$(get_annotation_value $yaml_path $ANNOTATION)
+  env=$(get_annotation_value $json_path $ANNOTATION)
   if [[ $env == "null" ]]; then
     # If prod service does not have annotation start with blue environment
     echo $BLUE
