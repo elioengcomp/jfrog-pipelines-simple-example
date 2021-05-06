@@ -53,7 +53,12 @@ resources:
   - name: helm_bluegreen_in_progress
     type: PropertyBag
     configuration:
-      hbgd_current_stage_env: blue
+      success: true
+
+  - name: helm_bluegreen_done
+    type: PropertyBag
+    configuration:
+      success: true
 
 pipelines:
   - name: helm_bluegreen_poc
@@ -156,6 +161,7 @@ pipelines:
       - name: helm_deploy
         type: HelmDeploy
         configuration:
+          affinityGroup: helm_deploy_group
           helmVersion: 3
           releaseName: ${current_stage_release}
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
@@ -164,29 +170,14 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_app_chart
               trigger: false
+            - name: helm_bluegreen_gitrepo
+              trigger: false
             - name: helm_bluegreen_configuration
-          outputResources:
-            - name: helm_bluegreen_in_progress
         execution:
           onStart:
             - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
             - add_run_variables current_stage_release=${!current_stage_config_name}
           onSuccess:
-            - write_output helm_bluegreen_in_progress hbgd_current_stage_env=$hbgd_current_stage_env
-
-      - name: update_stage_service
-        type: Bash
-        configuration:
-          inputResources:
-            - name: helm_bluegreen_gitrepo
-              trigger: false
-            - name: helm_bluegreen_configuration
-              trigger: false
-            - name: helm_bluegreen_in_progress
-          integrations:
-            - name: my_k8s
-        execution:
-          onExecute:
             - current_stage_target_service_config_name=hbgd_${hbgd_current_stage_env}_target_service
             - current_stage_target_service_name=${!current_stage_target_service_config_name}
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
@@ -196,17 +187,25 @@ pipelines:
       - name: test_stage
         type: Bash
         configuration:
-          inputSteps:
-            - name: update_stage_service
           integrations:
             - name: my_k8s
+          inputSteps:
+            - name: helm_deploy
+          outputResources:
+            - name: helm_bluegreen_in_progress
         execution:
           onExecute:
             - ls -la
+          onSuccess:
+            - write_output helm_bluegreen_in_progress success=true
+          onFailure:
+            - write_output helm_bluegreen_in_progress success=false
 
       - name: promote_deployment_to_prod
         type: Bash
         configuration:
+          integrations:
+            - name: my_k8s
           inputResources:
             - name: helm_bluegreen_configuration
               trigger: false
@@ -215,6 +214,23 @@ pipelines:
         execution:
           onExecute:
             - ls -la
+
+      - name: test_prod
+          type: Bash
+          configuration:
+            integrations:
+              - name: my_k8s
+            inputSteps:
+              - name: promote_deployment_to_prod
+            outputResources:
+              - name: helm_bluegreen_done
+          execution:
+            onExecute:
+              - ls -la
+            onSuccess:
+              - write_output helm_bluegreen_done success=true
+            onFailure:
+              - write_output helm_bluegreen_done success=false
 
       - name: rollback_deployment
         type: Bash
@@ -222,7 +238,7 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_configuration
               trigger: false
-            - name: helm_bluegreen_in_progress
+            - name: helm_bluegreen_done
               trigger: false
         execution:
           onExecute:
