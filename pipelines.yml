@@ -161,7 +161,6 @@ pipelines:
       - name: helm_deploy
         type: HelmDeploy
         configuration:
-          affinityGroup: helm_deploy_group
           helmVersion: 3
           releaseName: ${current_stage_release}
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
@@ -170,14 +169,26 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_app_chart
               trigger: false
-            - name: helm_bluegreen_gitrepo
-              trigger: false
             - name: helm_bluegreen_configuration
         execution:
           onStart:
             - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
             - add_run_variables current_stage_release=${!current_stage_config_name}
-          onSuccess:
+
+      - name: update_stage_service
+        type: Bash
+        configuration:
+          integrations:
+            - name: my_k8s
+          inputStep:
+            - name: helm_deploy
+          inputResources:
+            - name: helm_bluegreen_gitrepo
+              trigger: false
+            - name: helm_bluegreen_configuration
+              trigger: false
+        execution:
+          onExecute:
             - current_stage_target_service_config_name=hbgd_${hbgd_current_stage_env}_target_service
             - current_stage_target_service_name=${!current_stage_target_service_config_name}
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
@@ -190,7 +201,7 @@ pipelines:
           integrations:
             - name: my_k8s
           inputSteps:
-            - name: helm_deploy
+            - name: update_stage_service
           outputResources:
             - name: helm_bluegreen_in_progress
         execution:
