@@ -82,6 +82,9 @@ main() {
 
   set_fields $target_json_path $TARGET_SERVICE_NAME $ENV_LABEL
   kubectl apply -n $NAMESPACE -f $target_json_path
+  if [[ $? != 0 ]]; then
+    exit $?
+  fi
 }
 
 main $@
