@@ -50,6 +50,11 @@ resources:
       hbgd_prod_service: productionService
       hbgd_current_stage_env: blue
 
+  - name: helm_bluegreen_in_progress
+      type: PropertyBag
+      configuration:
+        hbgd_current_stage_env: blue
+
 pipelines:
   - name: helm_bluegreen_poc
     steps:
@@ -154,27 +159,30 @@ pipelines:
           helmVersion: 3
           releaseName: ${current_stage_release}
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
-          inputSteps:
-            - name: start_helm_blue_green_deploy
           integrations:
             - name: my_k8s
           inputResources:
             - name: helm_bluegreen_app_chart
+              trigger: false
             - name: helm_bluegreen_configuration
+          outputResource:
+            - name: helm_bluegreen_in_progress
         execution:
           onStart:
             - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
             - add_run_variables current_stage_release=${!current_stage_config_name}
+          onSuccess:
+            - write_output helm_bluegreen_in_progress hbgd_current_stage_env=$hbgd_current_stage_env
 
       - name: update_stage_service
         type: Bash
         configuration:
-          inputSteps:
-            - name: helm_deploy
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
             - name: helm_bluegreen_configuration
+              trigger: false
+            - name: helm_bluegreen_in_progress
           integrations:
             - name: my_k8s
         execution:
@@ -192,6 +200,30 @@ pipelines:
             - name: update_stage_service
           integrations:
             - name: my_k8s
+        execution:
+          onExecute:
+            - ls -la
+
+      - name: promote_deployment_to_prod
+        type: Bash
+        configuration:
+          inputResources:
+            - name: helm_bluegreen_configuration
+              trigger: false
+            - name: helm_bluegreen_in_progress
+              trigger: false
+        execution:
+          onExecute:
+            - ls -la
+
+      - name: rollback_deployment
+        type: Bash
+        configuration:
+          inputResources:
+            - name: helm_bluegreen_configuration
+              trigger: false
+            - name: helm_bluegreen_in_progress
+              trigger: false
         execution:
           onExecute:
             - ls -la
