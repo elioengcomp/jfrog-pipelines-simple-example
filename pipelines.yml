@@ -253,6 +253,8 @@ pipelines:
       - name: rollback_deployment
         type: Bash
         configuration:
+          integrations:
+            - name: my_k8s
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
