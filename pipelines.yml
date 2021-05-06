@@ -38,6 +38,18 @@ resources:
       buildName: helm_bluegreen_poc_chart
       buildNumber: 1
 
+  - name: helm_bluegreen_configuration
+    type: PropertyBag
+    configuration:
+      hbgd_namespace: namespace
+      hbgd_blue_release: blueRelease
+      hbgd_blue_target_service: blueTargetService
+      hbgd_green_release: greenRelease
+      hbgd_green_target_service: greenTargetService
+      hbgd_stage_service: stageService
+      hbgd_prod_service: productionService
+      hbgd_current_stage_env: blue
+
 pipelines:
   - name: helm_bluegreen_poc
     steps:
@@ -122,29 +134,25 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
+          outputResources:
+            - name: helm_bluegreen_configuration
         execution:
           onExecute:
-            - add_run_variables hbgd_namespace=$namespace
-            - add_run_variables hbgd_blue_release=$blueRelease
-            - add_run_variables hbgd_blue_target_service=$blueTargetService
-            - add_run_variables hbgd_green_release=$greenRelease
-            - add_run_variables hbgd_green_target_service=$greenTargetService
-            - add_run_variables hbgd_stage_service=$stageService
-            - add_run_variables hbgd_prod_service=$productionService
-
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
-            - add_run_variables hbgd_current_stage_env=$(./get_current_stage_environment.sh $productionService)
-            - 'echo "Current stage env: $hbgd_current_stage_env"'
-            - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
-            - add_run_variables hbgd_current_stage_release=${!current_stage_config_name}
-            - 'echo "Current stage release: $hbgd_current_stage_release"'
+            - current_stage_env=$(./get_current_stage_environment.sh $productionService)
             - popd
+            - >-
+              write_output helm_bluegreen_configuration hbgd_namespace=$namespace
+              hbgd_blue_release=$blueRelease hbgd_blue_target_service=$blueTargetService
+              hbgd_green_release=$greenRelease hbgd_green_target_service=$greenTargetService
+              hbgd_stage_service=$stageService hbgd_prod_service=$productionService
+              hbgd_current_stage_env=$current_stage_env
 
       - name: helm_deploy
         type: HelmDeploy
         configuration:
           helmVersion: 3
-          releaseName: ${hbgd_current_stage_release}
+          releaseName: ${current_stage_release}
           flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
           inputSteps:
             - name: start_helm_blue_green_deploy
@@ -152,6 +160,11 @@ pipelines:
             - name: my_k8s
           inputResources:
             - name: helm_bluegreen_app_chart
+            - name: helm_bluegreen_configuration
+          execution:
+            - onStart:
+                - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
+                - add_run_variables current_stage_release=${!current_stage_config_name}
 
       - name: update_stage_service
         type: Bash
@@ -161,6 +174,7 @@ pipelines:
           inputResources:
             - name: helm_bluegreen_gitrepo
               trigger: false
+            - name: helm_bluegreen_configuration
           integrations:
             - name: my_k8s
         execution:
