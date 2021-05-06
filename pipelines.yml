@@ -162,9 +162,9 @@ pipelines:
             - name: helm_bluegreen_app_chart
             - name: helm_bluegreen_configuration
         execution:
-          - onStart:
-              - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
-              - add_run_variables current_stage_release=${!current_stage_config_name}
+          onStart:
+            - current_stage_config_name=hbgd_${hbgd_current_stage_env}_release
+            - add_run_variables current_stage_release=${!current_stage_config_name}
 
       - name: update_stage_service
         type: Bash
