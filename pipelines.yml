@@ -165,7 +165,7 @@ pipelines:
             - name: helm_bluegreen_app_chart
               trigger: false
             - name: helm_bluegreen_configuration
-          outputResource:
+          outputResources:
             - name: helm_bluegreen_in_progress
         execution:
           onStart:
