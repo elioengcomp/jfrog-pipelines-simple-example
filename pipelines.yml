@@ -254,13 +254,17 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
+            - name: helm_bluegreen_gitrepo
+              trigger: false
             - name: helm_bluegreen_configuration
               trigger: false
             - name: helm_bluegreen_done
               trigger: false
         execution:
           onExecute:
-            - ls -la
+            - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
+            - ./change_environment_roles.sh $hbgd_blue_target_service $hbgd_green_target_service $hbgd_stage_service $hbgd_prod_service $hbgd_namespace
+            - popd
 
   - name: test
     steps:
