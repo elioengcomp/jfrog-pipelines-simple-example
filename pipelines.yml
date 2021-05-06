@@ -139,6 +139,8 @@ pipelines:
             greenTargetService: app-green-app
             stageService: stage-app
             productionService: prod-app
+          integrations:
+            - name: my_k8s
           inputSteps:
             - name: helm_publish
           inputResources:
