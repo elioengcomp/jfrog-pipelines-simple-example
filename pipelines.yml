@@ -149,7 +149,7 @@ pipelines:
         execution:
           onExecute:
             - pushd $res_helm_bluegreen_gitrepo_resourcePath/utils
-            - current_stage_env=$(./get_current_stage_environment.sh $productionService)
+            - current_stage_env=$(./get_current_stage_environment.sh $productionService $namespace)
             - "echo \"Current stage env: $current_stage_env\""
             - popd
             - >-
