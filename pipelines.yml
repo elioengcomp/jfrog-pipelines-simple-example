@@ -216,21 +216,21 @@ pipelines:
             - ls -la
 
       - name: test_prod
-          type: Bash
-          configuration:
-            integrations:
-              - name: my_k8s
-            inputSteps:
-              - name: promote_deployment_to_prod
-            outputResources:
-              - name: helm_bluegreen_done
-          execution:
-            onExecute:
-              - ls -la
-            onSuccess:
-              - write_output helm_bluegreen_done success=true
-            onFailure:
-              - write_output helm_bluegreen_done success=false
+        type: Bash
+        configuration:
+          integrations:
+            - name: my_k8s
+          inputSteps:
+            - name: promote_deployment_to_prod
+          outputResources:
+            - name: helm_bluegreen_done
+        execution:
+          onExecute:
+            - ls -la
+          onSuccess:
+            - write_output helm_bluegreen_done success=true
+          onFailure:
+            - write_output helm_bluegreen_done success=false
 
       - name: rollback_deployment
         type: Bash
