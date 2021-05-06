@@ -51,9 +51,9 @@ resources:
       hbgd_current_stage_env: blue
 
   - name: helm_bluegreen_in_progress
-      type: PropertyBag
-      configuration:
-        hbgd_current_stage_env: blue
+    type: PropertyBag
+    configuration:
+      hbgd_current_stage_env: blue
 
 pipelines:
   - name: helm_bluegreen_poc
