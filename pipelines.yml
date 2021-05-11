@@ -12,7 +12,7 @@ resources:
     configuration:
       registry: my_artifactory
       sourceRepository: my-docker_local
-      imageName: f5760.jfrog-pipelines.com/my-docker-local/app
+      imageName: b5880.jfrog-pipelines.com/my-docker-local/app
       imageTag: latest
       autoPull: true
 
@@ -74,7 +74,7 @@ pipelines:
           affinityGroup: dbp_group
           dockerFileLocation: app
           dockerFileName: Dockerfile
-          dockerImageName: f5760.jfrog-pipelines.com/my-docker-local/app
+          dockerImageName: b5880.jfrog-pipelines.com/my-docker-local/app
           dockerImageTag: 0.0.${run_number}
           inputSteps:
             - name: trigger_new_build
@@ -166,7 +166,7 @@ pipelines:
         configuration:
           helmVersion: 3
           releaseName: ${current_stage_release}
-          flags: "--set image.registry='f5760.jfrog-pipelines.com/my-docker'"
+          flags: "--set image.registry='b5880.jfrog-pipelines.com/my-docker'"
           integrations:
             - name: my_k8s
           inputResources:
