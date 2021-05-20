@@ -1,6 +1,11 @@
 resources:
   - name: chart
     type: HelmChart
+    configuration:
+      sourceArtifactory: my_art
+      repository: helm
+      chart: app
+      version: 0.0.0
 
 pipelines:
   - name: helm_blue_green_pipeline
