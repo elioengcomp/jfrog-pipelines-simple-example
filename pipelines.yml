@@ -1,3 +1,7 @@
+resources:
+  - name: chart
+    type: HelmChart
+
 pipelines:
   - name: helm_blue_green_pipeline
     steps:
@@ -6,3 +10,7 @@ pipelines:
         configuration:
           environmentVariables:
             my-env: value
+          integrations:
+            - name: my_k8s
+          inputResources:
+            - name: chart
