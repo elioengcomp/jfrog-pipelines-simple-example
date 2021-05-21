@@ -13,6 +13,10 @@ pipelines:
       - name: helm_blue_green_deploy
         type: HelmBlueGreenDeploy
         configuration:
+          namespace: namespace
+          blueReleaseName: app-blue
+          greenReleaseName: app-green
+
           environmentVariables:
             my-env: value
           integrations:
