@@ -18,7 +18,7 @@ pipelines:
           greenReleaseName: app-green
 
           environmentVariables:
-            my-env: value
+            myenv: value
           integrations:
             - name: my_k8s
           inputResources:
