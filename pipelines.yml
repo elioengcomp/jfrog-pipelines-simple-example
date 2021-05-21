@@ -16,7 +16,15 @@ pipelines:
           namespace: namespace
           blueReleaseName: app-blue
           greenReleaseName: app-green
-
+          roleServices:
+            - blueReferenceName: app-blue-service
+              greenReferenceName: app-green-service
+              idleName: app-idle-service
+              liveName: app-service
+            - blueReferenceName: app-blue-service
+              greenReferenceName: app-green-service
+              idleName: app-idle-service-2
+              liveName: app-service-2
           environmentVariables:
             myenv: "value"
           integrations:
