@@ -1,5 +1,22 @@
 resources:
-  - name: chart
+  - name: app_gitrepo
+    type: GitRepo
+    configuration:
+      gitProvider: my_github
+      path: elioengcomp/jfrog-pipelines-simple-example
+      branches:
+        include: helm-bluegreen-poc
+
+  - name: app_image
+    type: Image
+    configuration:
+      registry: my_art
+      sourceRepository: my-docker_local
+      imageName: 192.168.50.2:8082/my-docker-local/app
+      imageTag: latest
+      autoPull: true
+
+  - name: app_chart
     type: HelmChart
     configuration:
       sourceArtifactory: my_art
@@ -10,6 +27,57 @@ resources:
 pipelines:
   - name: helm_blue_green_pipeline
     steps:
+
+      - name: docker_build
+        type: DockerBuild
+        configuration:
+          affinityGroup: dbp_group
+          dockerFileLocation: app
+          dockerFileName: Dockerfile
+          dockerImageName: 192.168.50.2:8082/my-docker-local/app
+          dockerImageTag: 0.0.${run_number}
+          inputSteps:
+            - name: trigger_new_build
+          inputResources:
+            - name: app_gitrepo
+              trigger: false
+          integrations:
+            - name: my_art
+
+      - name: docker_push
+        type: DockerPush
+        configuration:
+          affinityGroup: dbp_group
+          targetRepository: my-docker-local
+          integrations:
+            - name: my_art
+          inputSteps:
+            - name: docker_build
+          outputResources:
+            - name: app_image
+
+      - name: helm_publish
+        type: HelmPublish
+        configuration:
+          helmVersion: 3
+          chartPath: "./chart/app"
+          lint: true
+          autoPublishBuildInfo: false
+          inputSteps:
+            - name: docker_push
+          inputResources:
+            - name: app_gitrepo
+              trigger: false
+          outputResources:
+            - name: app_chart
+        execution:
+          onStart:
+            - CHART_VERSION=0.0.$run_number
+            - pushd $res_app_gitrepo_resourcePath/chart/app
+            - "sed -ie \"s/^version: .*$/version: $CHART_VERSION/\" Chart.yaml"
+            - "sed -ie \"s/^appVersion: .*$/appVersion: $CHART_VERSION/\" Chart.yaml"
+            - popd
+
       - name: helm_blue_green_deploy
         type: HelmBlueGreenDeploy
         configuration:
@@ -31,4 +99,5 @@ pipelines:
           integrations:
             - name: my_k8s
           inputResources:
-            - name: chart
+            - name: app_chart
+              trigger: false
