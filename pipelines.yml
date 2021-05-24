@@ -25,7 +25,7 @@ pipelines:
             - blueReferenceName: app-blue-service
               greenReferenceName: app-green-service
               idleName: app-idle-service-2
-              liveName: app-service-2
+              liveName: simplehelm-generic-3
           environmentVariables:
             myenv: "value"
           integrations:
