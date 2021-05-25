@@ -102,3 +102,12 @@ pipelines:
           inputResources:
             - name: app_chart
               trigger: false
+
+      - name: show_env
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: helm_blue_green_deploy
+        execution:
+          onExecute:
+            - printenv
