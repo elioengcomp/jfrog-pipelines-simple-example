@@ -93,7 +93,8 @@ pipelines:
             - blueReferenceName: app-blue-app
               greenReferenceName: app-green-app
               idleName: app-idle-service-2
-              idleCustomProperties: ".metadata.annotations.\"elio.com/test\" = \"value\""
+              idleCustomProperties: >
+                .metadata.annotations."elio.com/test" = "value"
               liveName: app-service-2
           environmentVariables:
             myenv: "value"
