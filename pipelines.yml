@@ -82,7 +82,9 @@ pipelines:
           helmVersion: 3
           namespace: pipe-master-pool
           blueReleaseName: app-blue
+          blueFlags: "-set env=blue"
           greenReleaseName: app-green
+          greenFlags: "-set env=green"
           roleServices:
             - blueReferenceName: app-blue-app
               greenReferenceName: app-green-app
