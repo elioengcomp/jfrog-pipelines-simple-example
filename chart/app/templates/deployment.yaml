@@ -33,7 +33,7 @@ spec:
             - name: http-app
               containerPort: {{ .Values.containerPort }}
             - name: https-app
-              containerPort: { { .Values.containerPortHttps } }
+              containerPort: {{ .Values.containerPortHttps }}
           startupProbe:
             httpGet:
               path: {{ .Values.startupProbe.path }}
