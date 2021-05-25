@@ -16,6 +16,12 @@ spec:
       {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
       nodePort: {{ .Values.service.nodePort }}
       {{- end }}
+    - name: https
+      port: { { .Values.service.portHttps } }
+      targetPort: https-app
+      { { - if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePortHttps)) } }
+      nodePort: { { .Values.service.nodePortHttps } }
+      { { - end } }
   selector:
     {{- include "app.selectorLabels" . | nindent 4 }}
     component: {{ include "app.service.name" . }}
