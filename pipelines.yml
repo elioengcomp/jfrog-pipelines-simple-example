@@ -110,5 +110,5 @@ pipelines:
           inputSteps:
             - name: helm_blue_green_deploy
           integrations:
-            - name: my_art
+            - name: my_k8s
 
