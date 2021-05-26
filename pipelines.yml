@@ -106,5 +106,9 @@ pipelines:
       - name: helm_blue_green_role_switch
         type: HelmBlueGreenRoleSwitch
         configuration:
+          deployStep: helm_blue_green_deploy
           inputSteps:
             - name: helm_blue_green_deploy
+          integrations:
+            - name: my_art
+
