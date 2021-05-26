@@ -24,6 +24,11 @@ resources:
       chart: app
       version: 0.0.0
 
+  - name: deployRun
+    type: PropertyBag
+    configuration:
+      deployRun: "1"
+
 pipelines:
   - name: helm_blue_green_pipeline
     steps:
@@ -102,13 +107,19 @@ pipelines:
           inputResources:
             - name: app_chart
               trigger: false
+          outputResources:
+            - name: deployRun
+        execution:
+          onComplete:
+            - write_output deployRun deployRun=${run_number}
 
       - name: helm_blue_green_role_switch
         type: HelmBlueGreenRoleSwitch
         configuration:
           deployStep: helm_blue_green_deploy
-          inputSteps:
-            - name: helm_blue_green_deploy
+          inputResources:
+            - name: deployRun
+              trigger: false
           integrations:
             - name: my_k8s
 
