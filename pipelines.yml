@@ -103,11 +103,8 @@ pipelines:
             - name: app_chart
               trigger: false
 
-      - name: show_env
-        type: Bash
+      - name: helm_blue_green_role_switch
+        type: HelmBlueGreenRoleSwitch
         configuration:
           inputSteps:
             - name: helm_blue_green_deploy
-        execution:
-          onExecute:
-            - printenv
