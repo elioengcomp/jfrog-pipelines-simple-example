@@ -127,6 +127,7 @@ pipelines:
         type: HelmBlueGreenCleanup
         configuration:
           deployStep: helm_blue_green_deploy
+          flags: --debug --timeout 5m0s
           inputResources:
             - name: deployRun
               trigger: false
