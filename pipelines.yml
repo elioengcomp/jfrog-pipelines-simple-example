@@ -123,3 +123,13 @@ pipelines:
           integrations:
             - name: my_k8s
 
+      - name: helm_blue_green_cleanup
+        type: HelmBlueGreenCleanup
+        configuration:
+          deployStep: helm_blue_green_deploy
+          inputResources:
+            - name: deployRun
+              trigger: false
+          integrations:
+            - name: my_k8s
+
