@@ -12,7 +12,7 @@ resources:
     configuration:
       registry: my_art
       sourceRepository: docker-local
-      imageName: 192.168.50.2:8082/docker-local/app
+      imageName: pipelines-eliom-rt.ngrok.io/docker-local/app
       imageTag: latest
       autoPull: true
 
@@ -39,7 +39,7 @@ pipelines:
           affinityGroup: dbp_group
           dockerFileLocation: app
           dockerFileName: Dockerfile
-          dockerImageName: 192.168.50.2:8082/docker-local/app
+          dockerImageName: pipelines-eliom-rt.ngrok.io/docker-local/app
           dockerImageTag: 0.0.${run_number}
           inputResources:
             - name: app_gitrepo
