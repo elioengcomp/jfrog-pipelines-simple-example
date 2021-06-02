@@ -94,7 +94,7 @@ pipelines:
             - blueReferenceName: app-blue-app
               greenReferenceName: app-green-app
               idleName: app-idle-service
-              liveName: simplehelm-generic-3
+              liveName: app-service
             - blueReferenceName: app-blue-app
               greenReferenceName: app-green-app
               idleName: app-idle-service-2
