@@ -116,7 +116,7 @@ pipelines:
       - name: helm_blue_green_role_switch
         type: HelmBlueGreenRoleSwitch
         configuration:
-          deployStep: helm_blue_green_deploy
+          deployStep: helm_blue_green_deploy_error
           inputResources:
             - name: deployRun
               trigger: false
@@ -126,7 +126,7 @@ pipelines:
       - name: helm_blue_green_cleanup
         type: HelmBlueGreenCleanup
         configuration:
-          deployStep: helm_blue_green_deploy
+          deployStep: helm_blue_green_deploy_error
           flags: --debug --timeout 5m0s
           inputResources:
             - name: deployRun
