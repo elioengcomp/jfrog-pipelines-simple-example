@@ -1,140 +1,20 @@
 pipelines:
-  - name: my_log_generator_pipeline
+
+  - name: my_broken_host_pipeline
     steps:
-      - name: my_log_generator_step
-        type: Bash
-        configuration:
-          environmentVariables:
-            lines: 100
-        execution:
-          onExecute:
-            - echo "Running"
-            - text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris euismod vitae leo nec lacinia. Vivamus a pellentesque nulla. Vestibulum nec sollicitudin nisi. Phasellus dolor lacus, congue ac quam ut, sodales posuere est. Aenean non ex vehicula, ultricies elit vel, rhoncus diam. Suspendisse laoreet lectus convallis libero mollis aliquam. Maecenas id ornare nisi. Pellentesque efficitur iaculis leo, quis lobortis est egestas pellentesque."
-            - for ((i=1;i<=$lines;i+=1)); do echo "$i $text"; done
-
-  - name: my_pipeline
-    steps:
-      - name: my_step
-        type: Bash
-        execution:
-          onStart:
-            - echo "Starting"
-          onExecute:
-            # Testing stdout
-            - echo "Stdout content"
-            # Testing stderr
-            - echo "Stderr content" >> /dev/stderr
-          onComplete:
-            - echo "Done"
-
-  - name: my_long_pipeline
-    steps:
-      - name: my_long_step
-        type: Bash
-        execution:
-          onStart:
-            - echo "Starting"
-          onExecute:
-            # Testing long content
-            - curl https://norvig.com/big.txt
-          onComplete:
-            - echo "Done"
-
-  - name: my_long_win_pipeline
-    steps:
-      - name: my_long_win_step
-        type: PowerShell
-        execution:
-          onStart:
-            - echo "Starting"
-          onExecute:
-            # Testing long content
-            - (Invoke-WebRequest https://norvig.com/big.txt -UseBasicParsing).Content
-          onComplete:
-            - echo "Done"
-
-  - name: my_faulty_pipeline
-    steps:
-      - name: my_faulty_step
-        type: Bash
-        execution:
-          onStart:
-            - echo "Starting"
-          onExecute:
-            # Force error
-            - command_not_found
-          onComplete:
-            - echo "Done"
-
-  - name: my_hanging_pipeline
-    steps:
-      - name: my_hanging_step
-        type: Bash
-        execution:
-          onStart:
-            - echo "Starting"
-          onExecute:
-            - sleep 20
-            - echo "Running"
-          onComplete:
-            - echo "Done"
-
-  - name: my_simple_pipeline
-    steps:
-      - name: my_simple_step
-        type: Bash
-        execution:
-          onExecute:
-            - echo "Running"
-
-  - name: my_simple_powershell_pipeline
-    steps:
-      - name: my_simple_powershell_step
-        type: PowerShell
-        execution:
-          onExecute:
-            - echo "Running"
-
-  - name: my_matrix_pipeline
-    steps:
-      - name: pre_matrix_step
-        type: PreMatrix
-        execution:
-          onExecute:
-            - echo "Pre Matrix"
-
-      - name: matrix_step
-        type: Matrix
-        stepMode: Bash
-        configuration:
-          inputSteps:
-            - name: pre_matrix_step
-        stepletMultipliers:
-          environmentVariables:
-            - url: https://norvig.com/big.txt
-            - url: https://norvig.com/big.txt?param=1
-            - url: https://norvig.com/big.txt?param=2
-        execution:
-          onExecute:
-            - "echo \"Url: $url\""
-            - curl "$url"
-
-      - name: output
-        type: PostMatrix
-        configuration:
-          inputSteps:
-            - name: matrix_step
-        execution:
-          onExecute:
-            - echo "Post Matrix"
-
-  - name: my_host_pipeline
-    steps:
-      - name: my_host_step
+      - name: delete_tmp_folder
         type: Bash
         configuration:
           runtime:
             type: host
         execution:
           onExecute:
-            - echo "Running"
+            - rm -rf /tmp
+      - name: show_message
+          type: Bash
+          configuration:
+            inputSteps:
+              - name: delete_tmp_folder
+          execution:
+            onExecute:
+              - echo "Running"
