@@ -11,10 +11,10 @@ pipelines:
           onExecute:
             - rm -rf /tmp
       - name: show_message
-          type: Bash
-          configuration:
-            inputSteps:
-              - name: delete_tmp_folder
-          execution:
-            onExecute:
-              - echo "Running"
+        type: Bash
+        configuration:
+          inputSteps:
+            - name: delete_tmp_folder
+        execution:
+          onExecute:
+            - echo "Running"
