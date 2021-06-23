@@ -138,3 +138,12 @@ pipelines:
         execution:
           onExecute:
             - echo "Running"
+
+  - name: my_cli_version_win_pipeline
+    steps:
+      - name: my_cli_version_win_step
+        type: PowerShell
+        execution:
+          onExecute:
+            - jfrog --version
+
