@@ -10,7 +10,7 @@ COPY ./ /app/
 RUN cd /app; go build -o app main.go
 
 # Runnable image
-FROM alpine
+FROM mcr.microsoft.com/windows/nanoserver:1809-amd64
 
 ARG APP_VERSION
 ARG APP_PORT=8080
