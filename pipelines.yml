@@ -2,7 +2,7 @@ resources:
   - name: app_gitrepo
     type: GitRepo
     configuration:
-      gitProvider: s_github
+      gitProvider: s_gitHub
       path: elioengcomp/jfrog-pipelines-simple-example
       branches:
         include: helm-bluegreen-poc
@@ -32,7 +32,7 @@ pipelines:
             - name: app_gitrepo
               trigger: false
           integrations:
-            - name: my_art
+            - name: s_artifactory
 
       - name: docker_push
         type: DockerPush
@@ -40,7 +40,7 @@ pipelines:
           affinityGroup: dbp_group
           targetRepository: docker-local
           integrations:
-            - name: my_art
+            - name: s_artifactory
           inputSteps:
             - name: docker_build
           outputResources:
