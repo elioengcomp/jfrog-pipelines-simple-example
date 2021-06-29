@@ -17,7 +17,7 @@ resources:
       autoPull: true
 
 pipelines:
-  - name: helm_blue_green_pipeline
+  - name: docker_example
     steps:
 
       - name: docker_build
