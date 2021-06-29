@@ -7,7 +7,7 @@ WORKDIR /app
 COPY ./ /app/
 
 # Build
-RUN cd /app && go build -o app main.go
+RUN cd /app; go build -o app main.go
 
 # Runnable image
 FROM alpine
