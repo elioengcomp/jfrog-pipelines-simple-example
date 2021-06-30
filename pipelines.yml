@@ -87,9 +87,9 @@ pipelines:
           helmVersion: 3
           namespace: pipe-master-pool
           blueReleaseName: app-blue
-          blueFlags: "--set env=blue"
+          blueFlags: "--debug"
           greenReleaseName: app-green
-          greenFlags: "--set env=green"
+          greenFlags: "--debug"
           roleServices:
             - blueReferenceName: app-blue-app
               greenReferenceName: app-green-app
@@ -129,7 +129,7 @@ pipelines:
         type: HelmBlueGreenCleanup
         configuration:
           deployStep: helm_blue_green_deploy
-          flags: --debug --timeout 5m0s
+          flags: --debug
           inputResources:
             - name: deployRun
               trigger: false
