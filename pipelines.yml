@@ -8,9 +8,9 @@ resources:
         include: helm-bluegreen-poc
 
   - name: app_docker_build_info
-      type: BuildInfo
-      configuration:
-        sourceArtifactory: s_artifactory
+    type: BuildInfo
+    configuration:
+      sourceArtifactory: s_artifactory
 
 pipelines:
   - name: docker_example
