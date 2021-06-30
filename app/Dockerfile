@@ -1,5 +1,5 @@
 # Builder image
-FROM golang:latest
+FROM golang:1.15.5-alpine
 
 # Set workspace
 WORKDIR /app
@@ -7,10 +7,10 @@ WORKDIR /app
 COPY ./ /app/
 
 # Build
-RUN cd /app; go build -o app main.go
+RUN cd /app && go build -o app main.go
 
 # Runnable image
-FROM mcr.microsoft.com/windows/nanoserver:1809-amd64
+FROM alpine
 
 ARG APP_VERSION
 ARG APP_PORT=8080
