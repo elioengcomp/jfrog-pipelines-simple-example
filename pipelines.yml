@@ -5,7 +5,7 @@ resources:
       gitProvider: my_github
       path: elioengcomp/jfrog-pipelines-simple-example
       branches:
-        include: helm-bluegreen-poc
+        include: helm-app
 
   - name: app_image
     type: Image
