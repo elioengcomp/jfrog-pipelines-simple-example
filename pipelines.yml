@@ -26,16 +26,13 @@ pipelines:
           affinityGroup: dbp_group
           dockerFileLocation: app
           dockerFileName: Dockerfile
-          dockerImageName: ${artifactory_registry_url}/docker-local/app
+          dockerImageName: testpsdockerpush.jfrogdev.org/docker-local/app
           dockerImageTag: ${run_id}
           inputResources:
             - name: app_gitrepo
               trigger: false
           integrations:
             - name: s_artifactory
-        execution:
-          onStart:
-            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
 
       - name: docker_push
         type: DockerPush
