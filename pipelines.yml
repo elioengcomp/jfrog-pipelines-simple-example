@@ -33,9 +33,9 @@ pipelines:
               trigger: false
           integrations:
             - name: s_artifactory
-          execution:
-            onStart:
-              - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
+        execution:
+          onStart:
+            - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
 
       - name: docker_push
         type: DockerPush
