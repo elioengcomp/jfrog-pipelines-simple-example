@@ -10,7 +10,7 @@ resources:
   - name: app_image
     type: Image
     configuration:
-      registry: another_artifactory
+      registry: s_artifactory
       sourceRepository: docker-local
       imageName: testpsdockerpush.jfrogdev.org/docker-local/app
       imageTag: latest
@@ -32,7 +32,7 @@ pipelines:
             - name: app_gitrepo
               trigger: false
           integrations:
-            - name: another_artifactory
+            - name: s_artifactory
 
       - name: docker_push
         type: DockerPush
@@ -40,7 +40,7 @@ pipelines:
           affinityGroup: dbp_group
           targetRepository: docker-local
           integrations:
-            - name: another_artifactory
+            - name: s_artifactory
           inputSteps:
             - name: docker_build
           outputResources:
