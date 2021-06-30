@@ -7,42 +7,46 @@ resources:
       branches:
         include: helm-bluegreen-poc
 
-  - name: app_image
-    type: Image
-    configuration:
-      registry: s_artifactory
-      sourceRepository: docker-local
-      imageName: testpsdockerpush.jfrogdev.org/docker-local/app
-      imageTag: latest
-      autoPull: true
+  - name: app_docker_build_info
+      type: BuildInfo
+      configuration:
+        sourceArtifactory: s_artifactory
 
 pipelines:
   - name: docker_example
-    steps:
+    configuration:
+      environmentVariables:
+        readOnly:
+          JFROG_CLI_BUILD_NUMBER: ${run_id}
 
+    steps:
       - name: docker_build
         type: DockerBuild
         configuration:
           affinityGroup: dbp_group
           dockerFileLocation: app
           dockerFileName: Dockerfile
-          dockerImageName: testpsdockerpush.jfrogdev.org/docker-local/app
-          dockerImageTag: 0.0.${run_number}
+          dockerImageName: ${artifactory_registry_url}/docker-local/app
+          dockerImageTag: ${run_id}
           inputResources:
             - name: app_gitrepo
               trigger: false
           integrations:
             - name: s_artifactory
+          execution:
+            onStart:
+              - artifactory_registry_url=$(echo "$int_s_artifactory_url" | sed 's#.*//\([^/]*\)/.*#\1#')
 
       - name: docker_push
         type: DockerPush
         configuration:
           affinityGroup: dbp_group
           targetRepository: docker-local
+          autoPublishBuildInfo: true
           integrations:
             - name: s_artifactory
           inputSteps:
             - name: docker_build
           outputResources:
-            - name: app_image
+            - name: app_docker_build_info
 
