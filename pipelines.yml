@@ -25,8 +25,8 @@ pipelines:
 
   - name: my_simple_win_git_pipeline
     steps:
-      - name: my_simple_win_git_step
-        type: Bash
+      - name: my_simple_win_git_stepp
+        type: PowerShell
         configuration:
           inputResources:
             - name: my_git_repo
