@@ -22,3 +22,18 @@ pipelines:
             - pushd $res_my_git_repo_resourcePath
             - ls -la
             - popd
+
+  - name: my_simple_win_git_pipeline
+    steps:
+      - name: my_simple_win_git_step
+        type: Bash
+        configuration:
+          inputResources:
+            - name: my_git_repo
+          environmentVariables:
+            lines: 100
+        execution:
+          onExecute:
+            - pushd $res_my_git_repo_resourcePath
+            - dir
+            - popd
